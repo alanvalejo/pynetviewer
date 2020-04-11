@@ -1,0 +1,5 @@
+output
+.idea
+log
+*.pyc
+plot-matrix.py

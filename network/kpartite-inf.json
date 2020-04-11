@@ -1,0 +1,74 @@
+{
+    "output": "output/kpartite",
+    "directory": "output/",
+    "extension": "ncol",
+    "vertices": [
+        15,
+        15,
+        15,
+        15
+    ],
+    "communities": [
+        2,
+        2,
+        2,
+        2
+    ],
+    "x": [
+        8,
+        3,
+        0,
+        1
+    ],
+    "z": [
+        2,
+        2,
+        2,
+        2
+    ],
+    "p": [
+        [
+            0.5,
+            0.5
+        ],
+        [
+            0.5,
+            0.5
+        ],
+        [
+            0.5,
+            0.5
+        ],
+        [
+            0.5,
+            0.5
+        ]
+    ],
+    "balanced": false,
+    "d": [
+        0.45,
+        0.45,
+        0.45,
+        0.45
+    ],
+    "mu": [
+        0.55,
+        0.55,
+        0.55,
+        0.55
+    ],
+    "noise": [
+        0.1,
+        0.1,
+        0.1,
+        0.1
+    ],
+    "unweighted": false,
+    "normalize": true,
+    "conf": "input/input_kpartite.json",
+    "show_timing": false,
+    "save_timing_csv": false,
+    "save_timing_json": false,
+    "unique_key": false,
+    "edges": 171
+}

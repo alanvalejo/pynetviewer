@@ -1,0 +1,9 @@
+# Ignore everything
+*
+
+# But not these files...
+!.gitignore
+!plot_bipartite_layout_1.json
+!plot_bipartite_layout_2.json
+!plot_kpartite.json
+!plot_heterogeneous.json

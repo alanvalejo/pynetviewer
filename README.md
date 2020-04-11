@@ -58,23 +58,28 @@ main aim of the PyNetViewer is the visualization of the benchmark networks synth
 You can use a config file (.json) to specify the parameters, for instance:
 
 	$ python viewer.py -cnf input/plot_bipartite_1_layout_1.json
+	
+![](img/img_bnoc_bipartite_1_layout_1.png)
+	
 	$ python viewer.py -cnf input/plot_bipartite_1_layout_2.json
+	
+![](img/img_bnoc_bipartite_1_layout_2.png)
+	
 	$ python viewer.py -cnf input/plot_bipartite_2.json
+	
+![](img/img_bnoc_bipartite_2.png)	
+	
 	$ python viewer.py -cnf input/plot_bipartite_3.json
+
+![](img/img_bnoc_bipartite_3.png)	
+	
 	$ python viewer.py -cnf input/plot_kpartite.json
+	
+![](img/img_bnoc_kpartite.png)	
+	
 	$ python viewer.py -cnf input/plot_heterogeneous.json
-
-Bipartite First Layout             | Bipartite Second Layout                 
-:---------------------------------:|:----------------------------------------:
-![](img/img_bnoc_bipartite_1_layout_1.png) | ![](img/img_bnoc_bipartite_1_layout_2.png)
-
-Bipartite hard noise               | Bipartite many communities                 
-:---------------------------------:|:----------------------------------------:
-![](img/img_bnoc_bipartite_2.png)  | ![](img/img_bnoc_bipartite_3.png)
-
-Kpartite                           |  Heterogeneoous
-:---------------------------------:|:-------------------------------------:
-![](img/img_bnoc_kpartite.png)    | ![](img/img_bnoc_heterogeneous.png)
+	
+![](img/img_bnoc_heterogeneous.png)
 
 **Instal**
 

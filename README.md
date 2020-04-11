@@ -2,12 +2,8 @@
 
 **About**
 
-PyNetViewer is a python and igraph based tool for visualization of bipartite, k-partite and heterogeneous networks. The main aim of the PyNetViewer is the visualization of the benchmark networks synthesized by the Bnoc tool. 
-
-**Download**
-
-- You can download PyNetViewer software in http://www.alanvalejo.com.br/software?name=pynetviewer
-- You can download Bnoc software in http://www.alanvalejo.com.br/software?name=bnoc
+PyNetViewer is a python and igraph based tool for visualization of bipartite, k-partite and heterogeneous networks. The
+main aim of the PyNetViewer is the visualization of the benchmark networks synthesized by the Bnoc tool. 
 
 **Usage**
 
@@ -61,10 +57,12 @@ PyNetViewer is a python and igraph based tool for visualization of bipartite, k-
 
 You can use a config file (.json) to specify the parameters, for instance:
 
-	$ python pynetviewer.py -cnf input/plot_bipartite_layout_1.json
-	$ python pynetviewer.py -cnf input/plot_bipartite_layout_2.json
-	$ python pynetviewer.py -cnf input/plot_kpartite.json
-	$ python pynetviewer.py -cnf input/plot_heterogeneous.json
+	$ python viewer.py -cnf input/plot_bipartite_1_layout_1.json
+	$ python viewer.py -cnf input/plot_bipartite_1_layout_2.json
+	$ python viewer.py -cnf input/plot_bipartite_2.json
+	$ python viewer.py -cnf input/plot_bipartite_3.json
+	$ python viewer.py -cnf input/plot_kpartite.json
+	$ python viewer.py -cnf input/plot_heterogeneous.json
 
 Bipartite First Layout             | Bipartite Second Layout                 
 :---------------------------------:|:----------------------------------------:
@@ -109,7 +107,9 @@ Kpartite                           |  Heterogeneoous
 
 **Contact**
 
-- Alan Valejo <alanvalejo@gmail.com.br>
+- Alan Valejo
+- alanvalejo@gmail.com.br
+- www.alanvalejo.com.br
 - Postdoctoral research fellow at the University of São Paulo (USP), Brazil
 
 **License and credits**

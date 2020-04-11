@@ -82,12 +82,12 @@ Kpartite                           |  Heterogeneoous
     
     $ pip install -r requirements.txt
 
-> Anaconda env
+> Or Anaconda env
 
     $ conda env create -f environment.yml
     $ conda activate pynetviewer
 
-> Anaconda create
+> Or Anaconda create
 
     $ conda create --name pynetviewer python=3.7.2
     $ conda activate pynetviewer

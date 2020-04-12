@@ -59,10 +59,10 @@
     ],
     "unweighted": false,
     "normalize": true,
-    "conf": "input/input_heterogeneous.json",
+    "conf": "input/heterogeneous.json",
     "show_timing": false,
     "save_timing_csv": false,
     "save_timing_json": false,
     "unique_key": false,
-    "edges": 521
+    "edges": 486
 }

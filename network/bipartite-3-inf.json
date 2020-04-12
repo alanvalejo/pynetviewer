@@ -1,5 +1,5 @@
 {
-    "output": "output/bipartite_3",
+    "output": "output/bipartite-3",
     "directory": "output/",
     "extension": "ncol",
     "vertices": [
@@ -66,10 +66,10 @@
     ],
     "unweighted": false,
     "normalize": true,
-    "conf": "input/input_bipartite_3.json",
+    "conf": "input/bipartite-3.json",
     "show_timing": false,
     "save_timing_csv": false,
     "save_timing_json": false,
     "unique_key": false,
-    "edges": 29895
+    "edges": 29463
 }

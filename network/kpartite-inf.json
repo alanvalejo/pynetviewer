@@ -65,10 +65,10 @@
     ],
     "unweighted": false,
     "normalize": true,
-    "conf": "input/input_kpartite.json",
+    "conf": "input/kpartite.json",
     "show_timing": false,
     "save_timing_csv": false,
     "save_timing_json": false,
     "unique_key": false,
-    "edges": 171
+    "edges": 169
 }

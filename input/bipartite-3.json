@@ -1,23 +1,21 @@
 {
 	"vertices": [
-		15,
-		15,
-		15,
-		15
+		1550,
+		1550
 	],
 	"bbox": [
-		400,
-		400
+		600,
+		600
 	],
-	"input": "network/kpartite.ncol",
-	"type_file": "network/kpartite.type",
-	"membership": "network/kpartite.membership",
+	"input": "network/bipartite-3.ncol",
+	"type_file": "network/bipartite-3.type",
+	"membership": "network/bipartite-3.membership",
 	"directory": "output",
-	"output": "img_bnoc_kpartite",
+	"output": "bipartite-3",
 	"color": null,
 	"layout": null,
 	"weight": null,
-	"layout_name": "heterogeneous",
+	"layout_name": "fr",
 	"degree": true,
 	"curved": false,
 	"img_roteted": false,
@@ -30,20 +28,20 @@
 	"overlapping_paint": true,
 	"overlapping_shape": "rectangle",
 	"overlapping_color": "red",
-	"vertex_frame_color": "black",
+	"vertex_frame_color": "white",
 	"vertex_frame_width": 1.0,
     "coloring_degree": false,
     "coloring_weight": false,
     "delete_weight_le": null,
     "delete_degree": [],
 	"margin": 45,
-	"vertex_size": 8,
+	"vertex_size": 1,
 	"vertex_max": 15,
-	"vertex_min": 3,
+	"vertex_min": 1,
 	"weight_min": 0.5,
 	"weight_max": 10,
 	"opacity_min": 0.1,
-	"opacity_max": 0.5,
+	"opacity_max": 0.8,
     "community_detection": null,
-    "k": 5
+    "k": null
 }

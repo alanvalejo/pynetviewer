@@ -79,7 +79,8 @@ def plot_network(graph, options):
 
     graph.vs['vertex_color'] = 'black'
     vertex_color = graph.vs['vertex_color']
-    if options.membership is not None:
+    if (options.membership is not None) or (options.community_detection is not None):
+
         colors = []
 
         if options.color is None:
@@ -125,6 +126,7 @@ def plot_network(graph, options):
             edge_opacity.append("rgba(1,1,1," + str(opacity) + ")")
 
     graph.es['width'] = edge_width
+    graph.es['weight'] = edge_width
     graph.es['opacity'] = edge_opacity
     graph.vs['vertex_size'] = options.vertex_size
 
@@ -202,7 +204,8 @@ def plot_network(graph, options):
     visual_style['vertex_shape'] = graph.vs['vertex_shape']
     visual_style['vertex_size'] = graph.vs['vertex_size']
     visual_style['vertex_color'] = graph.vs['vertex_color']
-    visual_style['vertex_label_dist'] = [3] * graph['vertices'][0] + [-3] * graph['vertices'][1]
+    # erro em kpartite e unipartite
+    # visual_style['vertex_label_dist'] = [3] * graph['vertices'][0] + [-3] * graph['vertices'][1]
     visual_style['vertex_frame_color'] = graph.vs['vertex_frame_color']
     visual_style['vertex_frame_width'] = graph.vs['vertex_frame_width']
 
@@ -271,7 +274,6 @@ if __name__ == '__main__':
     if options.vertices is None:
         parser.error('required -v [number of vertices for each layer] arg.')
 
-    # Create graph
     graph = helperigraph.load(options.input, options.vertices, type_filename=options.type_file)
 
     # Create membership and overlaping lists
@@ -297,7 +299,7 @@ if __name__ == '__main__':
             for vertex, members in enumerate(membership):
                 graph.vs[vertex]['membership'] = set([members])
             options.membership = numpy.array(membership)
-            options.comms = [options.k, options.k]
+            options.comms = [options.k] * graph['layers']
         else:
             parser.error('There are no ' + str(options.community_detection) + ' algorithm.')
 

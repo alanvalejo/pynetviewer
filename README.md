@@ -59,27 +59,27 @@ You can use a config file (.json) to specify the parameters, for instance:
 
 	$ python viewer.py -cnf input/plot_bipartite_1_layout_1.json
 	
-![](img/img_bnoc_bipartite_1_layout_1.png)
+![](img/bipartite-1-layout-1.png)
 	
 	$ python viewer.py -cnf input/plot_bipartite_1_layout_2.json
 	
-![](img/img_bnoc_bipartite_1_layout_2.png)
+![](img/bipartite-1-layout-2.png)
 	
 	$ python viewer.py -cnf input/plot_bipartite_2.json
 	
-![](img/img_bnoc_bipartite_2.png)	
+![](img/bipartite-2.png)	
 	
 	$ python viewer.py -cnf input/plot_bipartite_3.json
 
-![](img/img_bnoc_bipartite_3.png)	
+![](img/bipartite-3.png)	
 	
 	$ python viewer.py -cnf input/plot_kpartite.json
 	
-![](img/img_bnoc_kpartite.png)	
+![](img/kpartite.png)	
 	
 	$ python viewer.py -cnf input/plot_heterogeneous.json
 	
-![](img/img_bnoc_heterogeneous.png)
+![](img/heterogeneous.png)
 
 **Instal**
 

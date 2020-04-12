@@ -1,51 +1,57 @@
 {
-    "output": "output/bipartite_1",
+    "output": "output/bipartite-2",
     "directory": "output/",
     "extension": "ncol",
     "vertices": [
-        150,
-        250
+        550,
+        550
     ],
     "communities": [
-        3,
-        3
+        6,
+        6
     ],
     "x": [
-        4,
-        4
+        0,
+        0
     ],
     "z": [
-        2,
-        2
+        0,
+        0
     ],
     "p": [
         [
-            0.3333333333333333,
-            0.3333333333333333,
-            0.33333333333333337
+            0.1,
+            0.1,
+            0.2,
+            0.2,
+            0.2,
+            0.2
         ],
         [
-            0.3333333333333333,
-            0.3333333333333333,
-            0.33333333333333337
+            0.1,
+            0.1,
+            0.2,
+            0.2,
+            0.2,
+            0.2
         ]
     ],
-    "balanced": true,
+    "balanced": false,
     "d": [
         0.4
     ],
     "mu": [
-        0.5
+        0.4
     ],
     "noise": [
-        0.1
+        0.3
     ],
     "unweighted": false,
     "normalize": true,
-    "conf": "input/input_bipartite_1.json",
+    "conf": "input/bipartite-2.json",
     "show_timing": false,
     "save_timing_csv": false,
     "save_timing_json": false,
     "unique_key": false,
-    "edges": 3153
+    "edges": 10092
 }

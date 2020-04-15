@@ -28,7 +28,7 @@
 	"overlapping_paint": true,
 	"overlapping_shape": "rectangle",
 	"overlapping_color": "red",
-	"vertex_frame_color": "white",
+	"vertex_frame_color": "black",
 	"vertex_frame_width": 1.0,
     "coloring_degree": false,
     "coloring_weight": false,

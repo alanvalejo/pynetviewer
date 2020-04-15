@@ -126,7 +126,6 @@ def plot_network(graph, options):
             edge_opacity.append("rgba(1,1,1," + str(opacity) + ")")
 
     graph.es['width'] = edge_width
-    graph.es['weight'] = edge_width
     graph.es['opacity'] = edge_opacity
     graph.vs['vertex_size'] = options.vertex_size
 
@@ -213,7 +212,10 @@ def plot_network(graph, options):
         gcopy = graph.copy()
         if options.layout_name == 'fr':
             gcopy.delete_edges(bondary_edges)
-            visual_style['layout'] = gcopy.layout(options.layout_name, weights='width')
+            # visual_style['layout'] = gcopy.layout(options.layout_name, weights='weight', niter=500, grid=True)
+            # visual_style['layout'] = gcopy.layout("drl", weights='weight')
+            visual_style['layout'] = gcopy.layout("davidson_harel")
+            # visual_style['layout'] = gcopy.layout("circle")
         elif options.layout_name == 'bipartite':
             visual_style['layout'] = gcopy.layout(options.layout_name, hgap=500, vgap=500)
         elif options.layout_name == 'kk':

@@ -2,12 +2,15 @@
 
 **About**
 
-PyNetViewer is a python and igraph based tool for visualization of bipartite, k-partite and heterogeneous networks. The
-main aim of the PyNetViewer is the visualization of the benchmark networks synthesized by the Bnoc tool. 
+PyNetViewer is a python and igraph based tool for visualization of bipartite, k-partite and heterogeneous networks. The main aim of the PyNetViewer is the visualization of the benchmark networks synthesized by the Bnoc tool. 
 
 **Usage**
 
-	$ python pynetviewer.py [options]
+PyNetViewer may operate in two modes: 1. using explicit command line parameters (or options) or 2. using a JSON config file (JavaScript Object Notation).
+
+**Command line parameters**
+
+    $ python pynetviewer.py [options]
 
 | Option                      | Domain                | Default        | Description                                  |
 | --------------------------- | ----------------------| -------------- | -------------------------------------------- |
@@ -53,31 +56,43 @@ main aim of the PyNetViewer is the visualization of the benchmark networks synth
 | -png, --save_png            | boolean               | false          | save png                                     |
 | -shw, --show                | boolean               | false          | plot output                                  |
 
+**JSON option**
+
+    $ python bnoc.py -cnf options.json
+
+JSON format: Data is in name/value pairs, separated by commas, curly braces hold objects and square brackets hold arrays.
+
+```javascript
+{
+    "option": "value"
+}
+```
+
 **Examples**
 
 You can use a config file (.json) to specify the parameters, for instance:
 
-	$ python viewer.py -cnf input/plot_bipartite_1_layout_1.json
+	$ python pynetviewer.py -cnf input/bipartite_1_layout_1.json
 	
 ![](img/bipartite-1-layout-1.png)
 	
-	$ python viewer.py -cnf input/plot_bipartite_1_layout_2.json
+	$ python pynetviewer.py -cnf input/bipartite_1_layout_2.json
 	
 ![](img/bipartite-1-layout-2.png)
 	
-	$ python viewer.py -cnf input/plot_bipartite_2.json
+	$ python pynetviewer.py -cnf input/bipartite_2.json
 	
 ![](img/bipartite-2.png)	
 	
-	$ python viewer.py -cnf input/plot_bipartite_3.json
+	$ python pynetviewer.py -cnf input/bipartite_3.json
 
 ![](img/bipartite-3.png)	
 	
-	$ python viewer.py -cnf input/plot_kpartite.json
+	$ python pynetviewer.py -cnf input/kpartite.json
 	
 ![](img/kpartite.png)	
 	
-	$ python viewer.py -cnf input/plot_heterogeneous.json
+	$ python pynetviewer.py -cnf input/heterogeneous.json
 	
 ![](img/heterogeneous.png)
 
@@ -121,16 +136,10 @@ You can use a config file (.json) to specify the parameters, for instance:
 
 - Giving credit to the author by citing the papers [1]
 - The GNU General Public License v3.0
-- This program comes with ABSOLUTELY NO WARRANTY. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS
- WITH YOU.
+- This program comes with ABSOLUTELY NO WARRANTY. THE ENTIRE RISK AS TO THE QUALITY AND PERFORMANCE OF THE PROGRAM IS WITH YOU.
 - Owner or contributors are not liable for any direct, indirect, incidental,
-special, exemplary, or consequential damages, (such as loss of data or profits, and others) arising in any way out of
- the use of this software, even if advised of the possibility of such damage.
-- This program is free software and distributed in the hope that it will be useful: you can redistribute it and/or
- modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either
-  version 3 of the License, or (at your option) any later version. See the GNU General Public License for more
-   details. You should have received a copy of the GNU General Public License along with this program. If not, see
-    http://www.gnu.org/licenses/.
+special, exemplary, or consequential damages, (such as loss of data or profits, and others) arising in any way out of the use of this software, even if advised of the possibility of such damage.
+- This program is free software and distributed in the hope that it will be useful: you can redistribute it and/or modify it under the terms of the GNU General Public License as published by the Free Software Foundation, either version 3 of the License, or (at your option) any later version. See the GNU General Public License for more details. You should have received a copy of the GNU General Public License along with this program. If not, see http://www.gnu.org/licenses/.
 
 **To-do list**
 

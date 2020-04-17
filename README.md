@@ -86,7 +86,7 @@ You can use a config file (.json) to specify the parameters, for instance:
 	
 	$ python pynetviewer.py -cnf input/bipartite_3.json
 
-![](img/bipartite-3.png | width=48)	
+![](img/bipartite-3.png)	
 	
 	$ python pynetviewer.py -cnf input/kpartite.json
 	

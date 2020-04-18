@@ -3,3 +3,4 @@ output
 log
 *.pyc
 plot-matrix.py
+__pycache__

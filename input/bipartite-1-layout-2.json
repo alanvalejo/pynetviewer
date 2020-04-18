@@ -1,47 +1,52 @@
 {
 	"vertices": [
-		150,
-		250
-	],
-	"bbox": [
-		350,
+		150
+		, 250
+	]
+	, "bbox": [
 		350
-	],
-	"input": "network/bipartite-1.ncol",
-	"type_file": "network/bipartite-1.type",
-	"membership": "network/bipartite-1.membership",
-	"directory": "output",
-	"output": "bipartite_1-layout-2",
-	"color": null,
-	"layout": null,
-	"weight": null,
-	"layout_name": "fr",
-	"degree": true,
-	"curved": false,
-	"img_roteted": false,
-	"img_trim": true,
-	"save_pdf": false,
-	"save_png": true,
-	"show": false,
-	"black": true,
-	"eq_color": false,
-	"overlapping_paint": true,
-	"overlapping_shape": "rectangle",
-	"overlapping_color": "red",
-	"vertex_frame_color": "black",
-	"vertex_frame_width": 1.0,
-    "coloring_degree": false,
-    "coloring_weight": false,
-    "delete_weight_le": null,
-    "delete_degree": [],
-	"margin": 45,
-	"vertex_size": 1,
-	"vertex_max": 15,
-	"vertex_min": 1,
-	"weight_min": 0.5,
-	"weight_max": 10,
-	"opacity_min": 0.1,
-	"opacity_max": 0.8,
-    "community_detection": null,
-    "k": 5
+		, 350
+	]
+	, "input": "network/bipartite-1.ncol"
+	, "output": "bipartite-1-layout-2"
+	, "output_directory": "output"
+	, "file_type": "network/bipartite-1.type"
+	, "file_membership": "network/bipartite-1.membership"
+	, "file_color": null
+	, "file_layout": null
+	, "file_weight": null
+	, "layout_name": "fr"
+	, "layout_niter": 500
+	, "layout_to_radial": false
+	, "layout_scaling_ratio": 5.0
+	, "layout_gravity": 30.0
+	, "layout_hub_attraction": false
+	, "degree_as_vertex_size": true
+	, "edge_curved": null
+	, "pdf_rotate": true
+	, "img_trim": true
+	, "save_pdf": true
+	, "save_png": true
+	, "show_plot": false
+	, "vertices_in_black": false
+	, "eq_color": false
+	, "overlapping_paint": true
+	, "overlapping_shape": "rectangle"
+	, "overlapping_color": "red"
+	, "vertex_frame_color": "black"
+	, "vertex_frame_width": 1.0
+    , "coloring_degree": false
+    , "coloring_weight": false
+    , "delete_weight_le": null
+    , "delete_degree": null
+	, "margin": 45
+	, "vertex_size": 1
+	, "vertex_max": 15
+	, "vertex_min": 3
+	, "weight_min": 0.1
+	, "weight_max": 5
+	, "opacity_min": 0.1
+	, "opacity_max": 0.3
+    , "community_detection": null
+    , "k": null
 }

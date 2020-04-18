@@ -3,7 +3,6 @@
 
 """
 PyNetViewer: A tool for visualization of bipartite, k-partite and heterogeneous networks
-==========================
 
 Copyright (C) 2017 Alan Valejo <alanvalejo@gmail.com> All rights reserved
 
@@ -25,9 +24,13 @@ see http://www.gnu.org/licenses/.
 
 Giving credit to the author by citing the papers [1]
 
-.. [1] Valejo, Alan and Goes, F. and Romanetto, L. M. and Oliveira, Maria C. F. and Lopes, A. A., A benchmarking tool
+[1] Valejo, Alan and Goes, F. and Romanetto, L. M. and Oliveira, Maria C. F. and Lopes, A. A., A benchmarking tool
 for the generation of bipartite network models with overlapping communities, in Knowledge and information systems,
 p. 1-29, 2019 doi: https://doi.org/10.1007/s10115-019-01411-9
+
+Warning: The original implementation (i.e. paper version [1]) is deprecated. This software is a new version, more robust
+and fast. There may be divergences between this version and the original algorithm. If you looking for the original
+version used in the paper don't hesitate to contact the authors.
 """
 
 import igraph
@@ -38,6 +41,7 @@ import inspect
 import math
 
 from colour import Color
+from fa2 import ForceAtlas2
 
 import models.args as args
 import models.helper as helper
@@ -53,6 +57,7 @@ __docformat__ = 'markdown en'
 __version__ = '0.1'
 __date__ = '2019-08-08'
 
+
 def build_layout(graph, options):
     coords = []
     w = 0.6 * min(numpy.asarray(options.bbox))
@@ -60,7 +65,7 @@ def build_layout(graph, options):
     n = len(options.vertices)
 
     teta = numpy.linspace(-math.pi / 2, 2 * math.pi - math.pi / 2, num=n + 1)
-    p = [numpy.asarray([r * math.cos(t), r * math.sin(t)] ) for t in teta]
+    p = [numpy.asarray([r * math.cos(t), r * math.sin(t)]) for t in teta]
 
     for layer in range(n):
         p0 = p[layer]
@@ -75,15 +80,15 @@ def build_layout(graph, options):
 
     return layout
 
-def plot_network(graph, options):
 
+def plot_network(graph, options):
     graph.vs['vertex_color'] = 'black'
     vertex_color = graph.vs['vertex_color']
-    if (options.membership is not None) or (options.community_detection is not None):
+    if (options.file_membership is not None) or (options.community_detection is not None):
 
         colors = []
 
-        if options.color is None:
+        if options.file_color is None:
             if options.eq_color:
                 for i in range(0, max(options.comms) + 1):
                     colors.append('#' + '%06X' % random.randint(0, 0xFFFFFF))
@@ -95,7 +100,7 @@ def plot_network(graph, options):
                 with open(options.output + '.color', 'w+') as f:
                     f.write('\n'.join(colors))
         else:
-            with open(options.color, 'r') as f:
+            with open(options.file_color, 'r') as f:
                 for index, line in enumerate(f):
                     colors.append(line.strip())
 
@@ -114,11 +119,11 @@ def plot_network(graph, options):
     for edge in graph.es():
         w = helper.remap(edge['weight'], old_min, old_max, options.weight_min, options.weight_max)
         if w is None:
-            w = 0.5
+            w = options.weight_min
         edge_width.append(w)
         opacity = helper.remap(edge['weight'], old_min, old_max, options.opacity_min, options.opacity_max)
         if opacity is None:
-            opacity = 0.2
+            opacity = options.opacity_min
         if graph.vs[edge.tuple[0]]['vertex_color'] != graph.vs[edge.tuple[1]]['vertex_color']:
             bondary_edges.append(edge)
             edge_opacity.append("rgba(1,1,1," + str(opacity) + ")")
@@ -129,20 +134,23 @@ def plot_network(graph, options):
     graph.es['opacity'] = edge_opacity
     graph.vs['vertex_size'] = options.vertex_size
 
-    if options.degree is True:
+    if options.degree_as_vertex_size is True:
         weight = graph.strength(weights='weight')
         old_min, old_max = min(weight), max(weight)
         for index, w in enumerate(weight):
             weight[index] = helper.remap(w, old_min, old_max, options.vertex_min, options.vertex_max)
         graph.vs['vertex_size'] = weight
 
-    if options.weight is not None:
+
+    if options.file_weight is not None:
         weight = options.weight.copy()
         old_min, old_max = min(weight), max(weight)
         for index, w in enumerate(weight):
             weight[index] = helper.remap(w, old_min, old_max, options.vertex_min, options.vertex_max)
             if math.isnan(weight[index]):
-                print('Warning: Vertex size with NaN value.')
+                print('Warning: Vertex size with NaN value. Please verify the conf options vertex_min and vertex_max')
+                print("Minimum and maximum vertex weight are: " + str(old_min) + ' and ' + str(old_max))
+                print("Properties vertex_min and vertex_max are: " + str(options.vertex_min) + ' and ' + str(options.vertex_max))
                 weight[index] = 1
         graph.vs['vertex_size'] = weight
 
@@ -152,13 +160,13 @@ def plot_network(graph, options):
     types = ['rectangle', 'circle', 'triangle-up', 'triangle-down']
     while len(types) < 10:
         types += types
-    if options.layout_name in ['kk', 'fr', 'heterogeneous']:
-        for layer in range(graph['layers']):
-            vertices = graph.vs.select(type=layer)['index']
-            for vertex in vertices:
-                graph.vs[vertex]['vertex_shape'] = types[layer]
 
-    if options.black:
+    for layer in range(graph['layers']):
+        vertices = graph.vs.select(type=layer)['index']
+        for vertex in vertices:
+            graph.vs[vertex]['vertex_shape'] = types[layer]
+
+    if options.vertices_in_black:
         graph.vs['vertex_color'] = 'black'
     else:
         graph.vs['vertex_color'] = vertex_color
@@ -171,7 +179,7 @@ def plot_network(graph, options):
     if options.coloring_degree:
         unique_degrees = list(numpy.unique(graph.strength()))
         blue = Color("#000000")
-        red = Color("#c10000")
+        red = Color("#CC7B7B")
         colors = list(blue.range_to(red, len(unique_degrees)))
         color_list = [str(colors[unique_degrees.index(degree)]) for degree in graph.strength()]
         graph.vs['vertex_color'] = color_list
@@ -179,7 +187,7 @@ def plot_network(graph, options):
     if options.coloring_weight:
         unique_weights = list(numpy.unique(options.weight))
         blue = Color("#000000")
-        red = Color("#c10000")
+        red = Color("#CC7B7B")
         colors = list(blue.range_to(red, len(unique_weights)))
         color_list = [str(colors[unique_weights.index(weight)]) for weight in options.weight]
         graph.vs['vertex_color'] = color_list
@@ -197,8 +205,8 @@ def plot_network(graph, options):
     visual_style['edge_label'] = None
     visual_style['edge_color'] = graph.es['opacity']
     visual_style['edge_width'] = graph.es['width']
-    if options.curved:
-        visual_style["edge_curved"] = 0.4
+    if options.edge_curved:
+        visual_style["edge_curved"] = options.edge_curved
 
     visual_style['vertex_shape'] = graph.vs['vertex_shape']
     visual_style['vertex_size'] = graph.vs['vertex_size']
@@ -208,34 +216,80 @@ def plot_network(graph, options):
     visual_style['vertex_frame_color'] = graph.vs['vertex_frame_color']
     visual_style['vertex_frame_width'] = graph.vs['vertex_frame_width']
 
-    if options.layout is None:
-        gcopy = graph.copy()
-        if options.layout_name == 'fr':
-            gcopy.delete_edges(bondary_edges)
-            # visual_style['layout'] = gcopy.layout(options.layout_name, weights='weight', niter=500, grid=True)
-            # visual_style['layout'] = gcopy.layout("drl", weights='weight')
-            visual_style['layout'] = gcopy.layout("davidson_harel")
-            # visual_style['layout'] = gcopy.layout("circle")
-        elif options.layout_name == 'bipartite':
-            visual_style['layout'] = gcopy.layout(options.layout_name, hgap=500, vgap=500)
-        elif options.layout_name == 'kk':
-            gcopy.delete_edges(bondary_edges)
-            visual_style['layout'] = gcopy.layout(options.layout_name)
-        elif options.layout_name == 'heterogeneous':
-            gcopy.delete_edges(bondary_edges)
-            visual_style['layout'] = build_layout(graph, options)
-            edge_curved = []
-            for edge in graph.es():
-                u, v = edge.tuple
-                type_u, type_v = graph.vs['type'][u], graph.vs['type'][v]
-                edge_curved.append(0.2 if type_u != type_v else -2.0)
-            visual_style['edge_curved'] = edge_curved
+    if options.file_layout is None:
+        if igraph.__version__ != '0.8.0':
+            visual_style['layout'] = graph.layout(options.layout_name)
+        else:
+            gcopy = graph.copy()
+            # gcopy.delete_edges(bondary_edges)
+            if options.layout_name == 'forceatlas2':
+                forceatlas2 = ForceAtlas2(
+                    # Behavior alternatives
+                    outboundAttractionDistribution=options.layout_hub_attraction  # Dissuade hubs
+                    , linLogMode=False  # NOT IMPLEMENTED
+                    , adjustSizes=False  # Prevent overlap NOT IMPLEMENTED
+                    , edgeWeightInfluence=1.0
+                    # Performance
+                    , jitterTolerance=10.0
+                    , barnesHutOptimize=True
+                    , barnesHutTheta=1.2
+                    , multiThreaded=False  # NOT IMPLEMENTED
+                    # Tuning
+                    , scalingRatio=options.layout_scaling_ratio
+                    , strongGravityMode=False
+                    , gravity=options.layout_gravity
+                    # Log
+                    , verbose=True
+                )
+                visual_style['layout'] = forceatlas2.forceatlas2_igraph_layout(gcopy, pos=None, iterations=options.layout_niter, weight_attr="weight")
+            if options.layout_name == 'fr':
+                visual_style['layout'] = graph.layout(options.layout_name, niter=options.layout_niter)
+            elif options.layout_name == 'graphopt':
+                visual_style['layout'] = gcopy.layout(options.layout_name, niter=options.layout_niter)
+            elif options.layout_name == 'lgl':
+                visual_style['layout'] = gcopy.layout(options.layout_name, coolexp=1.5, repulserad=-1, cellsize=-1)
+            elif options.layout_name == 'drl':
+                visual_style['layout'] = gcopy.layout(options.layout_name, weights='weight')
+            elif options.layout_name == 'sugiyama':
+                visual_style['layout'] = gcopy.layout(options.layout_name, weights='weight')
+            elif options.layout_name == 'auto':
+                visual_style['layout'] = gcopy.layout(options.layout_name)
+            elif options.layout_name == 'circle':
+                visual_style['layout'] = gcopy.layout(options.layout_name)
+            elif options.layout_name == 'random':
+                visual_style['layout'] = gcopy.layout(options.layout_name)
+            elif options.layout_name == 'rt':
+                visual_style['layout'] = gcopy.layout(options.layout_name)
+            elif options.layout_name == 'rt_circular':
+                visual_style['layout'] = gcopy.layout(options.layout_name)
+            elif options.layout_name == 'mds':
+                visual_style['layout'] = gcopy.layout(options.layout_name)
+            elif options.layout_name == 'star':
+                visual_style['layout'] = gcopy.layout(options.layout_name)
+            elif options.layout_name == 'dh':
+                visual_style['layout'] = gcopy.layout(options.layout_name)
+            elif options.layout_name == 'bipartite':
+                visual_style['layout'] = gcopy.layout(options.layout_name, hgap=500, vgap=500)
+            elif options.layout_name == 'kk':
+                visual_style['layout'] = gcopy.layout(options.layout_name)
+            elif options.layout_name == 'heterogeneous':
+                visual_style['layout'] = build_layout(graph, options)
+                edge_curved = []
+                for edge in graph.es():
+                    u, v = edge.tuple
+                    type_u, type_v = graph.vs['type'][u], graph.vs['type'][v]
+                    edge_curved.append(0.2 if type_u != type_v else -2.0)
+                visual_style['edge_curved'] = edge_curved
+
+            if options.layout_to_radial:
+                visual_style['layout'].to_radial(min_angle=50, max_angle=10, min_radius=0.0, max_radius=1.0)
+
         with open(options.output + '.layout', 'w+') as f:
             for xy in visual_style['layout']:
                 f.write(str(xy[0]) + ',' + str(xy[1]) + '\n')
     else:
         array = []
-        with open(options.layout, 'r') as f:
+        with open(options.file_layout, 'r') as f:
             for line in f:
                 item = list(map(float, line.strip().split(',')))
                 array.append([item[0], item[1]])
@@ -247,7 +301,7 @@ def plot_network(graph, options):
 
     if options.save_pdf:
         igraph.plot(graph, options.output + '.pdf', **visual_style)
-        if options.pdf_rotete:
+        if options.pdf_rotate:
             helper.rotate_pdf(options.output)
         if options.img_trim:
             command = 'pdfcrop ' + options.output + '.pdf ' + options.output + '.pdf'
@@ -258,8 +312,9 @@ def plot_network(graph, options):
         if options.img_trim:
             command = 'convert ' + options.output + '.png -trim ' + options.output + '.png'
             os.system(command)
-    if options.show:
+    if options.show_plot:
         igraph.plot(graph, **visual_style)
+
 
 if __name__ == '__main__':
 
@@ -276,13 +331,13 @@ if __name__ == '__main__':
     if options.vertices is None:
         parser.error('required -v [number of vertices for each layer] arg.')
 
-    graph = helperigraph.load(options.input, options.vertices, type_filename=options.type_file)
+    graph = helperigraph.load(options.input, options.vertices, type_filename=options.file_type)
 
     # Create membership and overlaping lists
     options.comms = [0] * graph['layers']
     options.overlapping = []
-    if options.membership:
-        with open(options.membership, 'r') as f:
+    if options.file_membership:
+        with open(options.file_membership, 'r') as f:
             for vertex, comms in enumerate(f):
                 members = set(map(int, comms.split()))
                 if len(members) > 1:
@@ -305,8 +360,8 @@ if __name__ == '__main__':
         else:
             parser.error('There are no ' + str(options.community_detection) + ' algorithm.')
 
-    if options.weight:
-        options.weight = numpy.loadtxt(options.weight)
+    if options.file_weight:
+        options.weight = numpy.loadtxt(options.file_weight)
 
     # Plot
     plot_network(graph, options)

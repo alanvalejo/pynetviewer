@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
 """
@@ -32,6 +32,7 @@ Warning: The original implementation (i.e. paper version [1]) is deprecated. Thi
 and fast. There may be divergences between this version and the original algorithm. If you looking for the original
 version used in the paper don't hesitate to contact the authors.
 """
+import sys
 
 import igraph
 import os
@@ -57,7 +58,6 @@ __docformat__ = 'markdown en'
 __version__ = '0.1'
 __date__ = '2019-08-08'
 
-
 def build_layout(graph, options):
     coords = []
     w = 0.6 * min(numpy.asarray(options.bbox))
@@ -80,241 +80,175 @@ def build_layout(graph, options):
 
     return layout
 
+def giant(graph):
+    components = graph.components()
+    components_sizes = components.sizes()
+    giant_component_index = components_sizes.index(max(components_sizes))
+    return components.subgraph(giant_component_index)
 
-def plot_network(graph, options):
-    graph.vs['vertex_color'] = 'black'
-    vertex_color = graph.vs['vertex_color']
-    if (options.file_membership is not None) or (options.community_detection is not None):
+def number_of_components(graph):
+    components = graph.components()
+    components_sizes = components.sizes()
+    return len(components_sizes)
 
-        colors = []
-
-        if options.file_color is None:
-            if options.eq_color:
-                for i in range(0, max(options.comms) + 1):
-                    colors.append('#' + '%06X' % random.randint(0, 0xFFFFFF))
-                with open(options.output + '.color', 'w+') as f:
-                    f.write('\n'.join(colors))
-            else:
-                for i in range(0, sum(options.comms) + 1):
-                    colors.append('#' + '%06X' % random.randint(0, 0xFFFFFF))
-                with open(options.output + '.color', 'w+') as f:
-                    f.write('\n'.join(colors))
+def compute_layout(graph, options, boundary_edges=None):
+    if boundary_edges:
+        gcopy = graph.copy()
+        gcopy.delete_edges(boundary_edges)
+    else:
+        gcopy = graph
+    if igraph.__version__ != '0.8.0':
+        if options.layout_name == 'heterogeneous':
+            graph.vs['layout'] = build_layout(graph, options)
+            for edge in graph.es():
+                u, v = edge.tuple
+                type_u, type_v = graph.vs['type'][u], graph.vs['type'][v]
+                edge['edge_curved'] = 0.2 if type_u != type_v else -2.0
         else:
-            with open(options.file_color, 'r') as f:
-                for index, line in enumerate(f):
-                    colors.append(line.strip())
+            graph.vs['layout'] = gcopy.layout(options.layout_name)
+    else:
 
+        if options.layout_name == 'forceatlas2':
+            forceatlas2 = ForceAtlas2(
+                # Behavior alternatives
+                outboundAttractionDistribution=options.layout_hub_attraction  # Dissuade hubs
+                , linLogMode=False  # NOT IMPLEMENTED
+                , adjustSizes=False  # Prevent overlap NOT IMPLEMENTED
+                , edgeWeightInfluence=1.0
+                # Performance
+                , jitterTolerance=10.0
+                , barnesHutOptimize=True
+                , barnesHutTheta=1.2
+                , multiThreaded=False  # NOT IMPLEMENTED
+                # Tuning
+                , scalingRatio=options.layout_scaling_ratio
+                , strongGravityMode=False
+                , gravity=options.layout_gravity
+                # Log
+                , verbose=True
+            )
+            graph.vs['layout'] = forceatlas2.forceatlas2_igraph_layout(
+                gcopy
+                , pos=None
+                , iterations=options.layout_niter
+                , weight_attr="weight"
+            )
+        if options.layout_name == 'fr':
+            graph.vs['layout'] = gcopy.layout(options.layout_name, niter=options.layout_niter)
+        elif options.layout_name == 'graphopt':
+            graph.vs['layout'] = gcopy.layout(options.layout_name, niter=options.layout_niter)
+        elif options.layout_name == 'lgl':
+            graph.vs['layout'] = gcopy.layout(options.layout_name, coolexp=1.5, repulserad=-1, cellsize=-1)
+        elif options.layout_name == 'heterogeneous':
+            graph.vs['layout'] = build_layout(graph, options)
+            for edge in graph.es():
+                u, v = edge.tuple
+                type_u, type_v = graph.vs['type'][u], graph.vs['type'][v]
+                edge['edge_curved'] = 0.2 if type_u != type_v else -2.0
+        else:  # drl, sugiyama, auto, circle, random, rt, rt_circular, mds, star, dh, bipartite, kk
+            graph.vs['layout'] = gcopy.layout(options.layout_name)
+
+        if options.layout_to_radial:
+            graph.vs['layout'].to_radial(min_angle=50, max_angle=10, min_radius=0.0, max_radius=1.0)
+
+    with open(options.output + '.layout', 'w+') as f:
+        for xy in graph.vs['layout']:
+            f.write(str(xy[0]) + ',' + str(xy[1]) + '\n')
+
+def compute_min_max(vector, new_min, new_max):
+    result = vector.copy()
+    old_min, old_max = min(result), max(result)
+    for key, item in enumerate(vector):
+        new_value = helper.remap(item, old_min, old_max, new_min, new_max)
+        if new_value is None or math.isnan(new_value):
+            new_value = new_min
+        result[key] = new_value
+    return result
+
+def get_boundary_edges(graph):
+    boundary_edges = []
+    for edge in graph.es():
+        if graph.vs[edge.tuple[0]]['vertex_color'] != graph.vs[edge.tuple[1]]['vertex_color']:
+            boundary_edges.append(edge)
+    return boundary_edges
+
+def read_membership(graph, file_membership):
+    graph['comms'] = [0] * graph['layers']
+    graph['overlapping'] = []
+    if options.file_membership:
+        with open(options.file_membership, 'r') as f:
+            for vertex, comms in enumerate(f):
+                members = set(map(int, comms.split()))
+                if len(members) > 1:
+                    graph['overlapping'].append(vertex)
+                graph.vs[vertex]['membership'] = members
         for layer in range(graph['layers']):
             vertices = graph.vs.select(type=layer)['index']
+            graph['comms'][layer] = max(list(set().union(*graph.vs[vertices]['membership']))) + 1
 
-            for vertex in vertices:
-                member = next(iter(graph.vs[vertex]['membership']))
-                if options.eq_color:
-                    vertex_color[vertex] = colors[member]
-                else:
-                    vertex_color[vertex] = colors[member + sum(options.comms[:layer])]
+def read_weight(graph, file):
+    graph.vs['weight'] = numpy.loadtxt(options.file)
 
-    old_min, old_max = min(graph.es['weight']), max(graph.es['weight'])
-    bondary_edges, edge_opacity, edge_width = ([] for i in range(3))
-    for edge in graph.es():
-        w = helper.remap(edge['weight'], old_min, old_max, options.weight_min, options.weight_max)
-        if w is None:
-            w = options.weight_min
-        edge_width.append(w)
-        opacity = helper.remap(edge['weight'], old_min, old_max, options.opacity_min, options.opacity_max)
-        if opacity is None:
-            opacity = options.opacity_min
-        if graph.vs[edge.tuple[0]]['vertex_color'] != graph.vs[edge.tuple[1]]['vertex_color']:
-            bondary_edges.append(edge)
-            edge_opacity.append("rgba(1,1,1," + str(opacity) + ")")
-        else:
-            edge_opacity.append("rgba(1,1,1," + str(opacity) + ")")
+def read_layout(graph, file):
+    graph.vs['layout'] = [None] * graph.vcount()
+    with open(file, 'r') as f:
+        for vertex, line in enumerate(f):
+            item = list(map(float, line.strip().split(',')))
+            graph.vs[vertex]['layout'] = [item[0], item[1]]
 
-    graph.es['width'] = edge_width
-    graph.es['opacity'] = edge_opacity
-    graph.vs['vertex_size'] = options.vertex_size
+def community_detection(graph, algorithm="fastgreedy", k=3, output='output_file'):
+    k_componentes = number_of_components(graph)
+    if k_componentes > k:
+        log.warning('The number of components in the graph is less than the number of communities defined.')
+        log.warning('Number of components: ' + str(k_componentes))
+        log.warning('Number of communities defined: ' + str(k))
+        sys.exit(1)
+    if algorithm == "fastgreedy":
+        cl = graph.community_fastgreedy(weights='weight')
+        membership = cl.as_clustering(k).membership
+        for vertex, members in enumerate(membership):
+            graph.vs[vertex]['membership'] = set([members])
+        graph['comms'] = [k] * graph['layers']
+        with open(output + '.membership', 'w+') as f:
+            for vertex in graph.vs():
+                f.write(' '.join(map(str, list(vertex['membership']))) + '\n')
+    else:
+        parser.error('There are no ' + str(algorithm) + ' algorithm.')
 
-    if options.degree_as_vertex_size is True:
-        weight = graph.strength(weights='weight')
-        old_min, old_max = min(weight), max(weight)
-        for index, w in enumerate(weight):
-            weight[index] = helper.remap(w, old_min, old_max, options.vertex_min, options.vertex_max)
-        graph.vs['vertex_size'] = weight
-
-
-    if options.file_weight is not None:
-        weight = options.weight.copy()
-        old_min, old_max = min(weight), max(weight)
-        for index, w in enumerate(weight):
-            weight[index] = helper.remap(w, old_min, old_max, options.vertex_min, options.vertex_max)
-            if math.isnan(weight[index]):
-                print('Warning: Vertex size with NaN value. Please verify the conf options vertex_min and vertex_max')
-                print("Minimum and maximum vertex weight are: " + str(old_min) + ' and ' + str(old_max))
-                print("Properties vertex_min and vertex_max are: " + str(options.vertex_min) + ' and ' + str(options.vertex_max))
-                weight[index] = 1
-        graph.vs['vertex_size'] = weight
-
-    graph.vs['vertex_shape'] = graph.vcount() * ['circle']
-    graph.vs['vertex_frame_color'] = str(options.vertex_frame_color)
-    graph.vs['vertex_frame_width'] = options.vertex_frame_width
+def compute_shapes(graph):
     types = ['rectangle', 'circle', 'triangle-up', 'triangle-down']
-    while len(types) < 10:
+    while len(types) < graph['layers']:
         types += types
+    for layer in range(graph['layers']):
+        for vertex in graph.vs.select(type=layer):
+            vertex['vertex_shape'] = types[layer]
+
+def read_color(graph, file):
+    with open(file, 'r') as f:
+        for index, line in enumerate(f):
+            graph.vertex['color'].append(line.strip())
+
+def compute_vertex_color_by_membership(graph, eq_colors=False, output='output_file'):
+    colors = []
+    if eq_colors:
+        total_colors = max(graph['comms'])
+    else:
+        total_colors = sum(graph['comms'])
+
+    for i in range(0, total_colors):
+        colors.append('#' + '%06X' % random.randint(0, 0xFFFFFF))
+
+    with open(output + '.color', 'w+') as f:
+        for color in colors:
+            f.write('\n'.join(color))
 
     for layer in range(graph['layers']):
-        vertices = graph.vs.select(type=layer)['index']
-        for vertex in vertices:
-            graph.vs[vertex]['vertex_shape'] = types[layer]
-
-    if options.vertices_in_black:
-        graph.vs['vertex_color'] = 'black'
-    else:
-        graph.vs['vertex_color'] = vertex_color
-
-    if options.overlapping is not None and options.overlapping_paint:
-        graph.vs[options.overlapping]['vertex_color'] = str(options.overlapping_color)
-        graph.vs[options.overlapping]['vertex_frame_color'] = str(options.vertex_frame_color)
-        graph.vs[options.overlapping]['vertex_shape'] = str(options.overlapping_shape)
-
-    if options.coloring_degree:
-        unique_degrees = list(numpy.unique(graph.strength()))
-        blue = Color("#000000")
-        red = Color("#CC7B7B")
-        colors = list(blue.range_to(red, len(unique_degrees)))
-        color_list = [str(colors[unique_degrees.index(degree)]) for degree in graph.strength()]
-        graph.vs['vertex_color'] = color_list
-
-    if options.coloring_weight:
-        unique_weights = list(numpy.unique(options.weight))
-        blue = Color("#000000")
-        red = Color("#CC7B7B")
-        colors = list(blue.range_to(red, len(unique_weights)))
-        color_list = [str(colors[unique_weights.index(weight)]) for weight in options.weight]
-        graph.vs['vertex_color'] = color_list
-
-    if options.delete_weight_le:
-        for weight in options.delete_weight_le:
-            graph.es.select(weight_le=weight).delete()
-
-    # remove isolated vertices
-    if options.delete_degree:
-        for degree in options.delete_degree:
-            graph.vs.select(_degree=degree).delete()
-
-    visual_style = {}
-    visual_style['edge_label'] = None
-    visual_style['edge_color'] = graph.es['opacity']
-    visual_style['edge_width'] = graph.es['width']
-    if options.edge_curved:
-        visual_style["edge_curved"] = options.edge_curved
-
-    visual_style['vertex_shape'] = graph.vs['vertex_shape']
-    visual_style['vertex_size'] = graph.vs['vertex_size']
-    visual_style['vertex_color'] = graph.vs['vertex_color']
-    # erro em kpartite e unipartite
-    # visual_style['vertex_label_dist'] = [3] * graph['vertices'][0] + [-3] * graph['vertices'][1]
-    visual_style['vertex_frame_color'] = graph.vs['vertex_frame_color']
-    visual_style['vertex_frame_width'] = graph.vs['vertex_frame_width']
-
-    if options.file_layout is None:
-        if igraph.__version__ != '0.8.0':
-            visual_style['layout'] = graph.layout(options.layout_name)
-        else:
-            gcopy = graph.copy()
-            # gcopy.delete_edges(bondary_edges)
-            if options.layout_name == 'forceatlas2':
-                forceatlas2 = ForceAtlas2(
-                    # Behavior alternatives
-                    outboundAttractionDistribution=options.layout_hub_attraction  # Dissuade hubs
-                    , linLogMode=False  # NOT IMPLEMENTED
-                    , adjustSizes=False  # Prevent overlap NOT IMPLEMENTED
-                    , edgeWeightInfluence=1.0
-                    # Performance
-                    , jitterTolerance=10.0
-                    , barnesHutOptimize=True
-                    , barnesHutTheta=1.2
-                    , multiThreaded=False  # NOT IMPLEMENTED
-                    # Tuning
-                    , scalingRatio=options.layout_scaling_ratio
-                    , strongGravityMode=False
-                    , gravity=options.layout_gravity
-                    # Log
-                    , verbose=True
-                )
-                visual_style['layout'] = forceatlas2.forceatlas2_igraph_layout(gcopy, pos=None, iterations=options.layout_niter, weight_attr="weight")
-            if options.layout_name == 'fr':
-                visual_style['layout'] = graph.layout(options.layout_name, niter=options.layout_niter)
-            elif options.layout_name == 'graphopt':
-                visual_style['layout'] = gcopy.layout(options.layout_name, niter=options.layout_niter)
-            elif options.layout_name == 'lgl':
-                visual_style['layout'] = gcopy.layout(options.layout_name, coolexp=1.5, repulserad=-1, cellsize=-1)
-            elif options.layout_name == 'drl':
-                visual_style['layout'] = gcopy.layout(options.layout_name, weights='weight')
-            elif options.layout_name == 'sugiyama':
-                visual_style['layout'] = gcopy.layout(options.layout_name, weights='weight')
-            elif options.layout_name == 'auto':
-                visual_style['layout'] = gcopy.layout(options.layout_name)
-            elif options.layout_name == 'circle':
-                visual_style['layout'] = gcopy.layout(options.layout_name)
-            elif options.layout_name == 'random':
-                visual_style['layout'] = gcopy.layout(options.layout_name)
-            elif options.layout_name == 'rt':
-                visual_style['layout'] = gcopy.layout(options.layout_name)
-            elif options.layout_name == 'rt_circular':
-                visual_style['layout'] = gcopy.layout(options.layout_name)
-            elif options.layout_name == 'mds':
-                visual_style['layout'] = gcopy.layout(options.layout_name)
-            elif options.layout_name == 'star':
-                visual_style['layout'] = gcopy.layout(options.layout_name)
-            elif options.layout_name == 'dh':
-                visual_style['layout'] = gcopy.layout(options.layout_name)
-            elif options.layout_name == 'bipartite':
-                visual_style['layout'] = gcopy.layout(options.layout_name, hgap=500, vgap=500)
-            elif options.layout_name == 'kk':
-                visual_style['layout'] = gcopy.layout(options.layout_name)
-            elif options.layout_name == 'heterogeneous':
-                visual_style['layout'] = build_layout(graph, options)
-                edge_curved = []
-                for edge in graph.es():
-                    u, v = edge.tuple
-                    type_u, type_v = graph.vs['type'][u], graph.vs['type'][v]
-                    edge_curved.append(0.2 if type_u != type_v else -2.0)
-                visual_style['edge_curved'] = edge_curved
-
-            if options.layout_to_radial:
-                visual_style['layout'].to_radial(min_angle=50, max_angle=10, min_radius=0.0, max_radius=1.0)
-
-        with open(options.output + '.layout', 'w+') as f:
-            for xy in visual_style['layout']:
-                f.write(str(xy[0]) + ',' + str(xy[1]) + '\n')
-    else:
-        array = []
-        with open(options.file_layout, 'r') as f:
-            for line in f:
-                item = list(map(float, line.strip().split(',')))
-                array.append([item[0], item[1]])
-        visual_style['layout'] = array
-
-    visual_style['bbox'] = options.bbox
-    visual_style['margin'] = options.margin
-    visual_style['edge_order_by'] = ('weight', 'asc')
-
-    if options.save_pdf:
-        igraph.plot(graph, options.output + '.pdf', **visual_style)
-        if options.pdf_rotate:
-            helper.rotate_pdf(options.output)
-        if options.img_trim:
-            command = 'pdfcrop ' + options.output + '.pdf ' + options.output + '.pdf'
-            os.system(command)
-
-    if options.save_png:
-        igraph.plot(graph, options.output + '.png', **visual_style)
-        if options.img_trim:
-            command = 'convert ' + options.output + '.png -trim ' + options.output + '.png'
-            os.system(command)
-    if options.show_plot:
-        igraph.plot(graph, **visual_style)
-
+        for vertex in graph.vs.select(type=layer):
+            member = next(iter(vertex['membership']))
+            if eq_colors:
+                vertex['vertex_color'] = colors[member]
+            else:
+                vertex['vertex_color'] = colors[member + sum(graph['comms'][:layer])]
 
 if __name__ == '__main__':
 
@@ -325,6 +259,9 @@ if __name__ == '__main__':
     args.update_json(options)
     args.check_output(options)
 
+    # Log instanciation
+    log = helper.initialize_logger(dir='log', output='log')
+
     # Check required fields
     if options.input is None:
         parser.error('required -f [input] arg.')
@@ -333,35 +270,147 @@ if __name__ == '__main__':
 
     graph = helperigraph.load(options.input, options.vertices, type_filename=options.file_type)
 
-    # Create membership and overlaping lists
-    options.comms = [0] * graph['layers']
-    options.overlapping = []
+    graph.vs['membership'] = None
+    graph['overlapping'] = None
+    graph['comms'] = None
+    graph['overlapping'] = None
+    graph.vs['weight'] = 1
+    graph.vs['vertex_color'] = 'black'
+    graph.vs['vertex_size'] = options.vertex_size_min
+    graph.vs['vertex_shape'] = graph.vcount() * ['circle']
+    graph.vs['vertex_frame_color'] = options.vertex_frame_color
+    graph.vs['vertex_frame_width'] = options.vertex_frame_width
+    boundary_edges = None
+
+    # Read files
     if options.file_membership:
-        with open(options.file_membership, 'r') as f:
-            for vertex, comms in enumerate(f):
-                members = set(map(int, comms.split()))
-                if len(members) > 1:
-                    options.overlapping.append(vertex)
-                graph.vs[vertex]['membership'] = members
-        options.membership = numpy.array(graph.vs['membership'])
-        for layer in range(graph['layers']):
-            vertices = graph.vs.select(type=layer)['index']
-            options.comms[layer] = max(list(set().union(*options.membership[vertices]))) + 1
-
-    if options.community_detection:
-        if options.community_detection == "fastgreedy":
-
-            cl = graph.community_fastgreedy(weights='weight')
-            membership = cl.as_clustering(options.k).membership
-            for vertex, members in enumerate(membership):
-                graph.vs[vertex]['membership'] = set([members])
-            options.membership = numpy.array(membership)
-            options.comms = [options.k] * graph['layers']
-        else:
-            parser.error('There are no ' + str(options.community_detection) + ' algorithm.')
-
+        read_membership(graph, options.file_membership)
     if options.file_weight:
-        options.weight = numpy.loadtxt(options.file_weight)
+        read_weight(graph, options.file_weight)
+    if options.file_layout:
+        read_layout(graph, options.file_layout)
+    if options.file_color:
+        read_color(graph, options.file_color)
 
-    # Plot
-    plot_network(graph, options)
+    graphs = [graph]
+
+    if options.split_projections:
+        graphs = []
+        projections = graph.bipartite_projection(graph.vs['type'])
+        for key in options.split_projections:
+            graphs.append(projections[key])
+
+    options.original_output = options.output
+    for key, graph in enumerate(graphs):
+
+        if options.split_projections:
+            options.output = options.original_output + '-p-' + str(key)
+
+        # Filter graph
+        if options.only_giant_component:
+            graph = giant(graph)
+        if options.delete_edge_by_weight_le:
+            for weight in options.delete_edge_by_weight_le:
+                graph.es.select(weight_le=weight).delete()
+        if options.delete_vertex_by_degree_le:
+            for degree in options.delete_vertex_by_degree_le:
+                graph.vs.select(_degree=degree).delete()
+
+        # Community detection
+        if options.community_detection_algorithm:
+            community_detection(graph, algorithm=options.community_detection_algorithm,
+                                k=options.number_of_communities, output=options.output)
+
+        # Style
+        if options.vertex_size_by == 'degree':
+            graph.vs['weight'] = compute_min_max(graph.degree(), options.vertex_size_min,
+                                                 options.vertex_size_max)
+        if options.vertex_size_by == 'strength':
+            graph.vs['weight'] = compute_min_max(graph.strength(weights='weight'), options.vertex_size_min,
+                                                 options.vertex_size_max)
+        if options.vertex_size_by == 'weight':
+            graph.vs['weight'] = compute_min_max(graph.vs['weight'], options.vertex_size_min, options.vertex_size_max)
+
+        if options.vertex_color_by == 'weight':
+            unique_degrees = list(numpy.unique(graph.strength()))
+            blue = Color("#000000")
+            red = Color("#CC7B7B")
+            colors = list(blue.range_to(red, len(unique_degrees)))
+            graph.vs['vertex_color'] = [str(colors[unique_degrees.index(degree)]) for degree in graph.strength()]
+        elif options.vertex_color_by == 'degree':
+            unique_weights = list(numpy.unique(graph.vs['weight']))
+            blue = Color("#000000")
+            red = Color("#CC7B7B")
+            colors = list(blue.range_to(red, len(unique_weights)))
+            graph.vs['vertex_color'] = [str(colors[unique_weights.index(weight)]) for weight in graph.vs['weight']]
+        elif options.vertex_color_by == 'strength':
+            unique_weights = list(numpy.unique(graph.strength(weights='weight')))
+            blue = Color("#000000")
+            red = Color("#CC7B7B")
+            colors = list(blue.range_to(red, len(unique_weights)))
+            graph.vs['vertex_color'] = [str(colors[unique_weights.index(weight)]) for weight in graph.strength(weights='weight')]
+        elif options.vertex_color_by == 'membership':
+            if not options.community_detection_algorithm and not options.file_membership:
+                log.warning('To coloring vertex by its membership provide a membership file ou set a community '
+                            'detection algorithm.')
+                sys.exit(1)
+            compute_vertex_color_by_membership(graph, eq_colors=options.eq_colors, output=options.output)
+
+        if options.overlapping_paint and graph['overlapping']:
+            overlapping = graph['overlapping']
+            graph.vs[overlapping]['vertex_color'] = str(options.overlapping_color)
+            graph.vs[overlapping]['vertex_frame_color'] = str(options.vertex_frame_color)
+            graph.vs[overlapping]['vertex_shape'] = str(options.overlapping_shape)
+
+        compute_shapes(graph)
+        graph.es['weight'] = compute_min_max(graph.es['weight'], options.edge_weight_min, options.edge_weight_max)
+        graph.es['opacity'] = compute_min_max(graph.es['weight'], options.edge_opacity_min, options.edge_opacity_max)
+        for edge in graph.es():
+            edge['opacity'] = "rgba(0,0,0," + str(edge['opacity']) + ")"
+
+        if options.edge_curved:
+            graph.es["edge_curved"] = options.edge_curved
+        else:
+            graph.es["edge_curved"] = 0.0
+        if not options.file_layout:
+            if options.use_boundary_edges:
+                boundary_edges = get_boundary_edges(graph)
+                for edge in boundary_edges:
+                    graph.es[edge.index]['opacity'] = "rgba(0,0,0,0.1)"
+            compute_layout(graph, options, boundary_edges=boundary_edges)
+
+        visual_style = {}
+
+        visual_style['edge_label'] = None
+        visual_style['edge_color'] = graph.es['opacity']
+        visual_style["edge_curved"] = graph.es["edge_curved"]
+        visual_style['edge_width'] = graph.es['weight']
+
+        visual_style['vertex_frame_width'] = graph.vs['vertex_frame_width']
+        visual_style['vertex_shape'] = graph.vs['vertex_shape']
+        visual_style['vertex_size'] = graph.vs['weight']
+        visual_style['vertex_color'] = graph.vs['vertex_color']
+        visual_style['vertex_frame_color'] = graph.vs['vertex_frame_color']
+
+        visual_style['layout'] = graph.vs['layout']
+
+        visual_style['bbox'] = options.bbox
+        visual_style['margin'] = options.margin
+        visual_style['edge_order_by'] = ('weight', 'asc')
+
+        if options.save_pdf:
+            igraph.plot(graph, options.output + '.pdf', **visual_style)
+            if options.pdf_rotate:
+                helper.rotate_pdf(options.output)
+            if options.img_trim:
+                command = 'pdfcrop ' + options.output + '.pdf ' + options.output + '.pdf'
+                os.system(command)
+
+        if options.save_png:
+            igraph.plot(graph, options.output + '.png', **visual_style)
+            if options.img_trim:
+                command = 'convert ' + options.output + '.png -trim ' + options.output + '.png'
+                os.system(command)
+
+        if options.show_plot:
+            igraph.plot(graph, **visual_style)

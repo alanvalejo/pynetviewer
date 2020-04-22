@@ -21,32 +21,31 @@
 	, "layout_scaling_ratio": 5.0
 	, "layout_gravity": 30.0
 	, "layout_hub_attraction": false
-	, "degree_as_vertex_size": true
-	, "edge_curved": null
+	, "use_boundary_edges": false
+	, "split_projections": false
 	, "pdf_rotate": true
 	, "img_trim": true
 	, "save_pdf": true
 	, "save_png": true
 	, "show_plot": false
-	, "vertices_in_black": false
-	, "eq_color": false
+	, "eq_colors": true
 	, "overlapping_paint": true
 	, "overlapping_shape": "rectangle"
 	, "overlapping_color": "red"
+	, "only_giant_component": false
 	, "vertex_frame_color": "black"
 	, "vertex_frame_width": 1.0
-    , "coloring_degree": false
-    , "coloring_weight": false
-    , "delete_weight_le": null
-    , "delete_degree": null
-	, "margin": 45
-	, "vertex_size": 1
-	, "vertex_max": 15
-	, "vertex_min": 1
-	, "weight_min": 0.5
-	, "weight_max": 10
-	, "opacity_min": 0.1
-	, "opacity_max": 0.8
-    , "community_detection": null
-    , "k": null
+    , "vertex_color_by": "membership"
+	, "vertex_size_by": "degree"
+	, "vertex_size_max": 12
+	, "vertex_size_min": 1
+	, "delete_vertex_by_degree_le": null
+	, "edge_weight_min": 1
+	, "edge_weight_max": 10
+	, "edge_opacity_min": 0.1
+	, "edge_opacity_max": 0.7
+	, "edge_curved": null
+	, "delete_edge_by_weight_le": null
+	, "community_detection_algorithm": null
+    , "number_of_communities": null
 }

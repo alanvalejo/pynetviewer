@@ -14,49 +14,53 @@ file (JavaScript Object Notation).
 
     $ python pynetviewer.py [options]
 
-| Option                      | Domain                | Default        | Description                                  |
-| --------------------------- | ----------------------| -------------- | -------------------------------------------- |
-| -in --input                 | str [FILE]            | 'input'        | input filename '.ncol' format                |
-| -dir --directory            | str [DIR]             | '.'            | directory of output file                     |
-| -out --output               | str [FILE]            | 'out'          | output filename                              |
-| -cnf --conf                 | str [FILE]            | None           | Input parameters in .json format             |
-| -type --type_file           | str [FILE]            | None           | graph type file name                         |
-| -m --membership             | str [FILE]            | None           | membership labels file name                  |
-| -c --cover                  | str [FILE]            | None           | cover labels file name                       |
-| -w --weight                 | str [FILE]            | None           | vertex weight filen name                     |
-| -xy --layout                | str [FILE]            | None           | layout xy file name                          |
-| -clr --color                | str [FILE]            | None           | colors file name                             |
-| -d, --delete_degree         | int array             | false          | delete vertex by degree                      |
-| -dwle, --delete_weight_le   | boolean               | false          | delete edge by weight less than or equal to  |
-| -cd, --coloring_degree      | boolean               | false          | coloring degree                              |
-| -cw, --coloring_weight      | boolean               | false          | coloring vertex weight                       |
-| -cdt, --community_detection | str                   | fastgreedy     | community detection algorithm                |
-| -os, --overlap_shape        | str                   | rectangle      | overlap shape                                |
-| -op, --overlapping_paint    | boolean               | false          | paint overlap vertex                         |
-| -vfc, --vertex_frame_color  | str                   | white          | vertex frame color (vertex border)           |
-| -vfw, --vertex_frame_width  | float                 | 1.0            | vertex frame width (vertex border)           |
-| -oc, --overlapping_color    | str                   | red            | overlapping vertex color                     |
-| -v, --vertices              | int array             | [10, 10]       | number of vertices for each layer            |
-| -k, --k                     | int                   | 2              | number of communities                        |
-| -mg, --margin               | int                   | 20             | image margin                                 |
-| -vsize, --vertex_size       | int                   | 10             | general vertex size                          |
-| -vmin, --vertex_min         | int                   | 6              | minimum vertex size                          |
-| -vmax, --vertex_max         | int                   | 100            | maximum vertex size                          |
-| -wmin, --weight_min         | int                   | 10             | minimum vertex weight                        |
-| -wmax, --weight_max         | int                   | 10             | maximum vertex weight                        |
-| -omin, --opacity_min        | float                 | 0.01           | minimum opacity for degree                   |
-| -omax, --opacity_max        | int                   | 0.08           | maximum opacity for degree                   |
-| -b, --bbox                  | int array             | [300, 300]     | the bounding box of the plot                 |
-| -deg, --degree              | boolean               | false          | degree as vertex size                        |
-| -blk, --black               | boolean               | false          | drawn only with black color                  |
-| -eq, --eq_color             | boolean               | false          | eq color for communities in different layers |
-| -lyt, --layout_name         | str                   | fr             | layout name                                  |
-| -crv, --curved              | boolean               | false          | edge curved                                  |
-| -rtt, --pdf_rotete         | boolean               | false          | rotated output                                |
-| -trm, --img_trim            | boolean               | false          | trim output                                  |
-| -pdf, --save_pdf            | boolean               | false          | save pdf                                     |
-| -png, --save_png            | boolean               | false          | save png                                     |
-| -shw, --show                | boolean               | false          | plot output                                  |
+| Option                                | Domain                | Default        | Description                                                    |
+| ------------------------------------- | ----------------------| -------------- | -------------------------------------------------------------- |
+| -in --input                           | str [FILE]            | 'input'        | input filename '.ncol' format                                  |
+| -dir --output_directory               | str [DIR]             | '.'            | directory of output file                                       |
+| -out --output                         | str [FILE]            | 'out'          | output filename                                                |
+| -cnf --conf                           | str [FILE]            | None           | Input parameters in .json format                               |
+| -type --file_type                     | str [FILE]            | None           | graph type file name                                           |
+| -m --file_membership                  | str [FILE]            | None           | membership labels file name                                    |
+| -w --file_weight                      | str [FILE]            | None           | vertex weight filen name                                       |
+| -xy --file_layout                     | str [FILE]            | None           | layout xy file name                                            |
+| -clr --file_color                     | str [FILE]            | None           | colors file name                                               |
+| -di, --delete_vertex_by_degree_le     | int array             | false          | delete vertex by degree                                        |
+| -dwle, --delete_edge_by_weight_le     | boolean               | false          | delete edge by weight less than or equal to                    |
+| -cdt, --community_detection_algorithm | str                   | fastgreedy     | community detection algorithm                                  |
+| -os, --overlapping_shape              | str                   | rectangle      | overlap shape                                                  |
+| -op, --overlapping_paint              | boolean               | false          | paint overlap vertex                                           |
+| -oc, --overlapping_color              | str                   | red            | overlapping vertex color                                       |
+| -vfc, --vertex_frame_color            | str                   | white          | vertex frame color (vertex border)                             |
+| -vfw, --vertex_frame_width            | float                 | 1.0            | vertex frame width (vertex border)                             |
+| -v, --vertices                        | int array             | [10, 10]       | number of vertices for each layer                              |
+| -k, --number_of_communites            | int                   | 2              | number of communities                                          |
+| -mg, --margin                         | int                   | 20             | image margin                                                   |
+| -vmin, --vertex_size_min              | int                   | 6              | minimum vertex size                                            |
+| -vmax, --vertex_size_max              | int                   | 100            | maximum vertex size                                            |
+| -wmin, --edge_weight_min              | int                   | 10             | minimum vertex weight                                          |
+| -wmax, --edge_weight_max              | int                   | 10             | maximum vertex weight                                          |
+| -omin, --edge_opacity_min             | float                 | 0.01           | minimum opacity for degree                                     |
+| -omax, --edge_opacity_max             | int                   | 0.08           | maximum opacity for degree                                     |
+| -b, --bbox                            | int array             | [300, 300]     | the bounding box of the plot                                   |
+| -eq, --eq_color                       | boolean               | false          | correspondence community color between layers                  |
+| -lyt, --layout_name                   | str                   | fr             | layout name                                                    |
+| -crv, --edge_curved                   | boolean               | false          | edge curved                                                    |
+| -rtt, --pdf_rotete                    | boolean               | false          | rotated output                                                 |
+| -trm, --img_trim                      | boolean               | false          | trim output                                                    |
+| -pdf, --save_pdf                      | boolean               | false          | save pdf                                                       |
+| -png, --save_png                      | boolean               | false          | save png                                                       |
+| -shw, --show                          | boolean               | false          | plot output                                                    |
+| -sp --split_projections               | int array             | false          | split the networks into its one-mode projections               |
+| -ube --use_boundary_edges             | boolean               | false          | force the use of boundary edges in the layout                  |
+| -lytn --layout_niter                  | int                   | 500            | number of iterations in layout                                 |
+| -lytg --layout_gravity                | float                 | 10.0           | gravity in Force Atlas 2 layout                                |
+| -lytsr --layout_scaling_ratio         | float                 | 5.0            | scaling ration in Force Atlas 2 layout                         |
+| -lytr --layout_to_radial              | boolean               | false          | convert layout to radial base                                  |
+| -lytha --layout_hub_attraction        | boolean               | false          | hub attraction in Force Atlas 2 layout                         |
+| -giant --only_giant_component         | boolean               | false          | plot only giant component                                      |
+| -vsb --vertex_size_by                 | str                   | degree         | set vertex size based on degree, weight or neither of them     |
+| -vcb --vertex_color_by                | str                   | degree         | set vertex size based on degree, membership or neither of them |
 
 **JSON option**
 
@@ -161,7 +165,7 @@ If not, see http://www.gnu.org/licenses/.
 
 > [1] Valejo, Alan and Goes, F. and Romanetto, L. M. and Oliveira, Maria C. F. and Lopes, A. A., A benchmarking tool 
 >for the generation of bipartite network models with overlapping communities, in Knowledge and information systems, 
->p. 1-29, 2019, doi: https://doi.org/10.1007/s10115-019-01411-9
+>vol. 62, p. 1641-1669, 2019, doi: https://doi.org/10.1007/s10115-019-01411-9
 
 ~~~~~{.bib}
 @article{valejo2019benchmarking,

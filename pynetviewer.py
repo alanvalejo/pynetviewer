@@ -187,7 +187,7 @@ def read_membership(graph, file_membership):
             graph['comms'][layer] = max(list(set().union(*graph.vs[vertices]['membership']))) + 1
 
 def read_weight(graph, file):
-    graph.vs['weight'] = numpy.loadtxt(options.file)
+    graph.vs['weight'] = numpy.loadtxt(file)
 
 def read_layout(graph, file):
     graph.vs['layout'] = [None] * graph.vcount()

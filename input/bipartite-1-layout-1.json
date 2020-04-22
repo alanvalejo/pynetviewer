@@ -33,7 +33,7 @@
 	, "overlapping_shape": "rectangle"
 	, "overlapping_color": "red"
 	, "only_giant_component": false
-	, "vertex_frame_color": "black"
+	, "vertex_frame_color": "rgba(1,1,1,0.3)"
 	, "vertex_frame_width": 1.0
     , "vertex_color_by": "membership"
 	, "vertex_size_by": "degree"

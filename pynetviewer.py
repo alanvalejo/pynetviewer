@@ -55,8 +55,8 @@ __credits__ = ['Alan Valejo']
 __homepage__ = 'https://www.alanvalejo.com.br'
 __license__ = 'GNU.GPL.v3'
 __docformat__ = 'markdown en'
-__version__ = '0.1'
-__date__ = '2019-08-08'
+__version__ = '0.1.0'
+__date__ = '2020-04-25'
 
 def build_layout(graph, options):
     coords = []

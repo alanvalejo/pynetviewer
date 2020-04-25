@@ -172,19 +172,19 @@ def get_boundary_edges(graph):
             boundary_edges.append(edge)
     return boundary_edges
 
-def read_membership(graph, file_membership):
+def read_membership(graph, file):
     graph['comms'] = [0] * graph['layers']
     graph['overlapping'] = []
-    if options.file_membership:
-        with open(options.file_membership, 'r') as f:
-            for vertex, comms in enumerate(f):
-                members = set(map(int, comms.split()))
-                if len(members) > 1:
-                    graph['overlapping'].append(vertex)
-                graph.vs[vertex]['membership'] = members
-        for layer in range(graph['layers']):
-            vertices = graph.vs.select(type=layer)['index']
-            graph['comms'][layer] = max(list(set().union(*graph.vs[vertices]['membership']))) + 1
+
+    with open(file, 'r') as f:
+        for vertex, comms in enumerate(f):
+            members = set(map(int, comms.split()))
+            if len(members) > 1:
+                graph['overlapping'].append(vertex)
+            graph.vs[vertex]['membership'] = members
+    for layer in range(graph['layers']):
+        vertices = graph.vs.select(type=layer)['index']
+        graph['comms'][layer] = max(list(set().union(*graph.vs[vertices]['membership']))) + 1
 
 def read_weight(graph, file):
     graph.vs['weight'] = numpy.loadtxt(file)

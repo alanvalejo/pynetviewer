@@ -9,3 +9,5 @@
 !bipartite-3.json
 !kpartite.json
 !heterogeneous.json
+!many-to-many.json
+!one-to-one.json

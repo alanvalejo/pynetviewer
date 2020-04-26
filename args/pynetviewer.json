@@ -266,13 +266,15 @@
 		, "default": [300, 300]
 		, "help": "the bounding box of the plot"
 	}
-	, "eq": {
-		"long": "eq_colors"
+	, "lc": {
+		"long": "layers_to_color"
 		, "required": false
-		, "dest": "eq_colors"
-		, "action": "store_true"
+		, "dest": "layers_to_color"
+		, "type": "int"
+		, "nargs": "+"
+		, "action": "store"
 		, "default": false
-		, "help": "correspondence community color between layers"
+		, "help": "layers to coloring in a k-partite network"
 	}
 	, "sp": {
 		"long": "split_projections"

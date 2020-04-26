@@ -1,0 +1,51 @@
+{
+    "output": "../output/one-to-one",
+    "directory": null,
+    "extension": "ncol",
+    "vertices": [
+        50,
+        50
+    ],
+    "communities": [
+        3,
+        3
+    ],
+    "x": [
+        0,
+        0
+    ],
+    "z": [
+        0,
+        0
+    ],
+    "p": [
+        [
+            0.3333333333333333,
+            0.3333333333333333,
+            0.33333333333333337
+        ],
+        [
+            0.3333333333333333,
+            0.3333333333333333,
+            0.33333333333333337
+        ]
+    ],
+    "balanced": true,
+    "d": [
+        0.6
+    ],
+    "mu": [
+        0.6
+    ],
+    "noise": [
+        0.05
+    ],
+    "unweighted": false,
+    "normalize": true,
+    "conf": "../input/one-to-one.json",
+    "show_timing": false,
+    "save_timing_csv": false,
+    "save_timing_json": false,
+    "unique_key": false,
+    "edges": 326
+}

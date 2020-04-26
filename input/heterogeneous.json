@@ -29,7 +29,6 @@
 	, "save_pdf": true
 	, "save_png": true
 	, "show_plot": false
-	, "eq_colors": true
 	, "overlapping_paint": true
 	, "overlapping_shape": "rectangle"
 	, "overlapping_color": "red"

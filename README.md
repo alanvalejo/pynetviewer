@@ -43,7 +43,6 @@ file (JavaScript Object Notation).
 | -omin, --edge_opacity_min             | float                 | 0.01           | minimum opacity for degree                                     |
 | -omax, --edge_opacity_max             | int                   | 0.08           | maximum opacity for degree                                     |
 | -b, --bbox                            | int array             | [300, 300]     | the bounding box of the plot                                   |
-| -eq, --eq_color                       | boolean               | false          | correspondence community color between layers                  |
 | -lyt, --layout_name                   | str                   | fr             | layout name                                                    |
 | -crv, --edge_curved                   | boolean               | false          | edge curved                                                    |
 | -rtt, --pdf_rotete                    | boolean               | false          | rotated output                                                 |
@@ -101,6 +100,20 @@ You can use a config file (.json) to specify the parameters, for instance:
 	$ python pynetviewer.py -cnf input/heterogeneous.json
 	
 ![](img/heterogeneous.png)
+
+**Notes**
+
+In k-partite networks there are two types of community definitions: First, one-to-one correspondence, that is the same
+as the definition of community structure in unipartite networks, i.e., there are the same number of communities in the
+each layer and the communities are correspondents between layers (Figure 1a). 2. many-to-many correspondence, in which
+there are different number of communities in the layers and the communities are independents between layers (Figure 1b).
+The `membership` file must represent both scenarios, i.e., vertices in the same community must have the same
+community_id and vertices from different communities must have different community_id, regardless of the layer they
+are assigned in.
+
+| 1a) One-to-one definition       | 1b) Many-to-many definition      |         
+| ------------------------------- | -------------------------------- |
+| ![](img/one-to-one.png)         | ![](img/many-to-many.png)        |
 
 **Instal**
 

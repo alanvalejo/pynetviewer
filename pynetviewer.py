@@ -184,7 +184,8 @@ def read_membership(graph, file):
             graph.vs[vertex]['membership'] = members
     for layer in range(graph['layers']):
         vertices = graph.vs.select(type=layer)['index']
-        graph['comms'][layer] = max(list(set().union(*graph.vs[vertices]['membership']))) + 1
+        unique_comms = numpy.unique(list(set().union(*graph.vs[vertices]['membership'])))
+        graph['comms'][layer] = len(unique_comms)
 
 def read_weight(graph, file):
     graph.vs['weight'] = numpy.loadtxt(file)
@@ -228,27 +229,21 @@ def read_color(graph, file):
         for index, line in enumerate(f):
             graph.vertex['color'].append(line.strip())
 
-def compute_vertex_color_by_membership(graph, eq_colors=False, output='output_file'):
-    colors = []
-    if eq_colors:
-        total_colors = max(graph['comms'])
-    else:
-        total_colors = sum(graph['comms'])
+def compute_vertex_color_by_membership(graph, output='output_file'):
 
-    for i in range(0, total_colors):
+    unique_comms = numpy.unique(list(set().union(*graph.vs['membership'])))
+    colors = []
+    for i in range(len(unique_comms)):
         colors.append('#' + '%06X' % random.randint(0, 0xFFFFFF))
+    comm2colors = dict(zip(unique_comms, range(len(colors))))
+
+    for vertex in graph.vs():
+        member = next(iter(vertex['membership']))
+        vertex['vertex_color'] = colors[comm2colors[member]]
 
     with open(output + '.color', 'w+') as f:
         for color in colors:
             f.write('\n'.join(color))
-
-    for layer in range(graph['layers']):
-        for vertex in graph.vs.select(type=layer):
-            member = next(iter(vertex['membership']))
-            if eq_colors:
-                vertex['vertex_color'] = colors[member]
-            else:
-                vertex['vertex_color'] = colors[member + sum(graph['comms'][:layer])]
 
 if __name__ == '__main__':
 
@@ -354,7 +349,15 @@ if __name__ == '__main__':
                 log.warning('To coloring vertex by its membership provide a membership file ou set a community '
                             'detection algorithm.')
                 sys.exit(1)
-            compute_vertex_color_by_membership(graph, eq_colors=options.eq_colors, output=options.output)
+            compute_vertex_color_by_membership(graph, output=options.output)
+
+        if options.layers_to_color:
+            layers_list = list(range(graph['layers']))
+            black_layers = list(set(layers_list) - set(options.layers_to_color))
+            black_vertices = []
+            for layer in black_layers:
+                black_vertices += graph.vs.select(type=layer).indices
+            graph.vs[black_vertices]['vertex_color'] = 'black'
 
         if options.overlapping_paint and graph['overlapping']:
             overlapping = graph['overlapping']

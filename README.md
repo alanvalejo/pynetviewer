@@ -77,19 +77,19 @@ JSON format: Data is in name/value pairs, separated by commas, curly braces hold
 
 You can use a config file (.json) to specify the parameters, for instance:
 
-	$ python pynetviewer.py -cnf input/bipartite_1_layout_1.json
+	$ python pynetviewer.py -cnf input/bipartite-1-layout-1.json
 	
 ![](img/bipartite-1-layout-1.png)
 	
-	$ python pynetviewer.py -cnf input/bipartite_1_layout_2.json
+	$ python pynetviewer.py -cnf input/bipartite-1-layout-2.json
 	
 ![](img/bipartite-1-layout-2.png)
 	
-	$ python pynetviewer.py -cnf input/bipartite_2.json
+	$ python pynetviewer.py -cnf input/bipartite-2.json
 	
 ![](img/bipartite-2.png)	
 	
-	$ python pynetviewer.py -cnf input/bipartite_3.json
+	$ python pynetviewer.py -cnf input/bipartite-3.json
 
 ![](img/bipartite-3.png)	
 	
@@ -139,6 +139,7 @@ are assigned in.
     $ conda install -c anaconda networkx
     $ sudo apt install texlive-extra-utils
     $ sudo apt install imagemagick
+    $ pip install --upgrade bezier[full] ????
     
 > Install ForceAtlas2 for Python: https://github.com/bhargavchippada/forceatlas2
 

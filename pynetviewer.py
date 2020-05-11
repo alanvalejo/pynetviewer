@@ -40,6 +40,7 @@ import numpy
 import random
 import inspect
 import math
+import json
 
 from colour import Color
 from fa2 import ForceAtlas2
@@ -107,7 +108,6 @@ def compute_layout(graph, options, boundary_edges=None):
         else:
             graph.vs['layout'] = gcopy.layout(options.layout_name)
     else:
-
         if options.layout_name == 'forceatlas2':
             forceatlas2 = ForceAtlas2(
                 # Behavior alternatives
@@ -133,8 +133,8 @@ def compute_layout(graph, options, boundary_edges=None):
                 , iterations=options.layout_niter
                 , weight_attr="weight"
             )
-        if options.layout_name == 'fr':
-            graph.vs['layout'] = gcopy.layout(options.layout_name, niter=options.layout_niter)
+        elif options.layout_name == 'fr':
+            graph.vs['layout'] = gcopy.layout(options.layout_name, niter=options.layout_niter, grid="nogrid", weights='weight')
         elif options.layout_name == 'graphopt':
             graph.vs['layout'] = gcopy.layout(options.layout_name, niter=options.layout_niter)
         elif options.layout_name == 'lgl':
@@ -400,6 +400,37 @@ if __name__ == '__main__':
         visual_style['bbox'] = options.bbox
         visual_style['margin'] = options.margin
         visual_style['edge_order_by'] = ('weight', 'asc')
+
+        if options.save_json:
+            graph_json = {'edges': [None] * graph.ecount(), 'nodes': [None] * graph.vcount()}
+
+            for edge in graph.es():
+                graph_json['edges'][edge.index] = {
+                    'size': edge['weight']
+                    , 'source': str(edge.tuple[0])
+                    , 'target': str(edge.tuple[1])
+                    , 'id': str(edge.index)
+                    , 'color': edge['opacity']
+                }
+
+            for vertex in graph.vs():
+                graph_json['nodes'][vertex.index] = {
+                    'shape': vertex['vertex_shape']
+                    , 'weight': vertex['weight']
+                    , 'type': vertex['type']
+                    , 'layer': vertex['type']
+                    , 'label': str(vertex.index)
+                    , 'x': graph.vs['layout'][vertex.index][0]
+                    , 'y': graph.vs['layout'][vertex.index][1]
+                    , 'id': str(vertex.index)
+                    , 'color': vertex['vertex_color']
+                    , 'size': vertex['weight']
+                }
+                if vertex['membership']:
+                    graph_json['nodes'][vertex.index]['membership'] = next(iter(vertex['membership']))
+
+            with open(options.output + '.json', 'w+') as f:
+                json.dump(graph_json, f, indent=4)
 
         if options.save_pdf:
             igraph.plot(graph, options.output + '.pdf', **visual_style)

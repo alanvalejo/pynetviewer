@@ -23,6 +23,7 @@
 	, "layout_hub_attraction": false
 	, "use_boundary_edges": false
 	, "split_projections": false
+    , "layers_to_color": false
 	, "pdf_rotate": true
 	, "img_trim": true
 	, "save_pdf": true

@@ -1,104 +1,104 @@
 {
-	"descriptions": "Plot graphs"
-	, "in": {
-		"long": "input"
-		, "required": false
-		, "dest": "input"
-		, "type": "str"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": null
-		, "help": "graph file name"
-	}
-	, "dir": {
-		"long": "output_directory"
-		, "required": false
-		, "dest": "output_directory"
-		, "type": "str"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": null
-		, "help": "output directory name"
-	}
-	, "out": {
-		"long": "output"
-		, "required": false
-		, "dest": "output"
-		, "type": "str"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": null
-		, "help": "output file name"
-	}
-	, "cnf": {
-		"long": "conf"
-		, "required": false
-		, "dest": "conf"
-		, "type": "str"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": null
-		, "help": "config file name"
-	}
-	, "type": {
-		"long": "file_type"
-		, "required": false
-		, "dest": "file_type"
-		, "type": "str"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": null
-		, "help": "graph type file name"
-	}
-	, "m": {
-		"long": "file_membership"
-		, "required": false
-		, "dest": "file_membership"
-		, "type": "str"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": null
-		, "help": "membership labels file name"
-	}
-	, "w": {
-		"long": "file_weight"
-		, "required": false
-		, "dest": "file_weight"
-		, "type": "str"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": null
-		, "help": "vertex weight file name"
-	}
-	, "xy": {
-		"long": "file_layout"
-		, "required": false
-		, "dest": "file_layout"
-		, "type": "str"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": null
-		, "help": "layout xy file name"
-	}
-	, "clr": {
-		"long": "file_color"
-		, "required": false
-		, "dest": "file_color"
-		, "type": "str"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": null
-		, "help": "colors file name"
-	}
-	, "di": {
-		"long": "delete_vertex_by_degree_le"
-		, "required": false
-		, "dest": "delete_vertex_by_degree_le"
-		, "type": "int"
-		, "nargs": "+"
-		, "action": "store"
-		, "default": false
-		, "help": "delete vertex by degree"
+	"descriptions": "Plot graphs",
+	"in": {
+		"long": "input",
+		"required": false,
+		"dest": "input",
+		"type": "str",
+		"nargs": "?",
+		"action": "store",
+		"default": null,
+		"help": "graph file name"
+	},
+	"dir": {
+		"long": "output_directory",
+		"required": false,
+		"dest": "output_directory",
+		"type": "str",
+		"nargs": "?",
+		"action": "store",
+		"default": null,
+		"help": "output directory name"
+	},
+	"out": {
+		"long": "output",
+		"required": false,
+		"dest": "output",
+		"type": "str",
+		"nargs": "?",
+		"action": "store",
+		"default": null,
+		"help": "output file name"
+	},
+	"cnf": {
+		"long": "conf",
+		"required": false,
+		"dest": "conf",
+		"type": "str",
+		"nargs": "?",
+		"action": "store",
+		"default": null,
+		"help": "config file name"
+	},
+	"type": {
+		"long": "file_type",
+		"required": false,
+		"dest": "file_type",
+		"type": "str",
+		"nargs": "?",
+		"action": "store",
+		"default": null,
+		"help": "graph type file name"
+	},
+	"m": {
+		"long": "file_membership",
+		"required": false,
+		"dest": "file_membership",
+		"type": "str",
+		"nargs": "?",
+		"action": "store",
+		"default": null,
+		"help": "membership labels file name"
+	},
+	"w": {
+		"long": "file_weight",
+		"required": false,
+		"dest": "file_weight",
+		"type": "str",
+		"nargs": "?",
+		"action": "store",
+		"default": null,
+		"help": "vertex weight file name"
+	},
+	"xy": {
+		"long": "file_layout",
+		"required": false,
+		"dest": "file_layout",
+		"type": "str",
+		"nargs": "?",
+		"action": "store",
+		"default": null,
+		"help": "layout xy file name"
+	},
+	"clr": {
+		"long": "file_color",
+		"required": false,
+		"dest": "file_color",
+		"type": "str",
+		"nargs": "?",
+		"action": "store",
+		"default": null,
+		"help": "colors file name"
+	},
+	"di": {
+		"long": "delete_vertex_by_degree_le",
+		"required": false,
+		"dest": "delete_vertex_by_degree_le",
+		"type": "int",
+		"nargs": "+",
+		"action": "store",
+		"default": false,
+		"help": "delete vertex by degree"
 	}
     , "dwle": {
         "long": "delete_edge_by_weight_le"
@@ -117,64 +117,64 @@
         , "action": "store_true"
         , "default": false
         , "help": "community detection algorithm"
-    }
-	, "os": {
-		"long": "overlapping_shape"
-		, "required": false
-		, "dest": "overlapping_shape"
-		, "type": "str"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": "rectangle"
-		, "help": "overlap shape"
-	}
-	, "op": {
-		"long": "overlapping_paint"
-		, "required": false
-		, "dest": "overlapping_paint"
-		, "action": "store_true"
-		, "default": false
-		, "help": "overlap vertex paint"
-	}
-	, "vfc": {
-		"long": "vertex_frame_color"
-		, "required": false
-		, "dest": "vertex_frame_color"
-		, "type": "str"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": "white"
-		, "help": "vertex frame color"
-	}
-	, "vfw": {
-		"long": "vertex_frame_width"
-		, "required": false
-		, "dest": "vertex_frame_width"
-		, "type": "int"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": 1.0
-		, "help": "vertex frame width"
-	}
-	, "oc": {
-		"long": "overlapping_color"
-		, "required": false
-		, "dest": "overlapping_color"
-		, "type": "str"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": "red"
-		, "help": "overlapping vertex color"
-	}
-	, "v": {
-		"long": "vertices"
-		, "required": false
-		, "dest": "vertices"
-		, "type": "int"
-		, "nargs": "+"
-		, "action": "store"
-		, "default": null
-		, "help": "number of vertices for each layer"
+    },
+	"os": {
+		"long": "overlapping_shape",
+		"required": false,
+		"dest": "overlapping_shape",
+		"type": "str",
+		"nargs": "?",
+		"action": "store",
+		"default": "rectangle",
+		"help": "overlap shape"
+	},
+	"op": {
+		"long": "overlapping_paint",
+		"required": false,
+		"dest": "overlapping_paint",
+		"action": "store_true",
+		"default": false,
+		"help": "overlap vertex paint"
+	},
+	"vfc": {
+		"long": "vertex_frame_color",
+		"required": false,
+		"dest": "vertex_frame_color",
+		"type": "str",
+		"nargs": "?",
+		"action": "store",
+		"default": "white",
+		"help": "vertex frame color"
+	},
+	"vfw": {
+		"long": "vertex_frame_width",
+		"required": false,
+		"dest": "vertex_frame_width",
+		"type": "int",
+		"nargs": "?",
+		"action": "store",
+		"default": 1.0,
+		"help": "vertex frame width"
+	},
+	"oc": {
+		"long": "overlapping_color",
+		"required": false,
+		"dest": "overlapping_color",
+		"type": "str",
+		"nargs": "?",
+		"action": "store",
+		"default": "red",
+		"help": "overlapping vertex color"
+	},
+	"v": {
+		"long": "vertices",
+		"required": false,
+		"dest": "vertices",
+		"type": "int",
+		"nargs": "+",
+		"action": "store",
+		"default": null,
+		"help": "number of vertices for each layer"
 	}
     , "k": {
         "long": "number_of_communities"
@@ -185,245 +185,253 @@
        , "action": "store"
        , "default": 3
        , "help": "number of communities"
-    }
-	, "mg": {
-		"long": "margin"
-		, "required": false
-		, "dest": "margin"
-		, "type": "int"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": 20
-		, "help": "image margin"
-	}
-	, "vmin": {
-		"long": "vertex_size_min"
-		, "required": false
-		, "dest": "vertex_size_min"
-		, "type": "int"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": 1
-		, "help": "minimum vertex size"
-	}
-	, "vmax": {
-		"long": "vertex_size_max"
-		, "required": false
-		, "dest": "vertex_size_max"
-		, "type": "int"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": 3
-		, "help": "maximum vertex size"
-	}
-	, "wmin": {
-		"long": "edge_weight_min"
-		, "required": false
-		, "dest": "edge_weight_min"
-		, "type": "int"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": 0.1
-		, "help": "minimum vertex weight"
-	}
-	, "wmax": {
-		"long": "edge_weight_max"
-		, "required": false
-		, "dest": "edge_weight_max"
-		, "type": "int"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": 10
-		, "help": "maximum vertex weight"
-	}
-	, "omin": {
-		"long": "edge_opacity_min"
-		, "required": false
-		, "dest": "edge_opacity_min"
-		, "type": "int"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": 0.01
-		, "help": "minimum opacity degree"
-	}
-	, "omax": {
-		"long": "edge_opacity_max"
-		, "required": false
-		, "dest": "edge_opacity_max"
-		, "type": "int"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": 0.8
-		, "help": "maximum opacity for degree"
-	}
-	, "b": {
-		"long": "bbox"
-		, "required": false
-		, "dest": "bbox"
-		, "type": "int"
-		, "nargs": "+"
-		, "action": "store"
-		, "default": [300, 300]
-		, "help": "the bounding box of the plot"
-	}
-	, "lc": {
-		"long": "layers_to_color"
-		, "required": false
-		, "dest": "layers_to_color"
-		, "type": "int"
-		, "nargs": "+"
-		, "action": "store"
-		, "default": false
-		, "help": "layers to coloring in a k-partite network"
-	}
-	, "sp": {
-		"long": "split_projections"
-		, "required": false
-		, "dest": "split_projections"
-		, "action": "store_true"
-		, "default": false
-		, "help": "split the networks into its one-mode projections"
-	}
-	, "ube": {
-		"long": "use_boundary_edges"
-		, "required": false
-		, "dest": "use_boundary_edges"
-		, "action": "store_true"
-		, "default": false
-		, "help": "force the use of boundary edges in the layout"
-	}
-	, "lyt": {
-		"long": "layout_name"
-		, "required": false
-		, "dest": "layout_name"
-		, "type": "str"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": "fr"
-		, "help": "layout name"
-	}
-	, "lytn": {
-		"long": "layout_niter"
-		, "required": false
-		, "dest": "layout_niter"
-		, "type": "int"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": 500
-		, "help": "number of iterations in layout"
-	}
-	, "lytg": {
-		"long": "layout_gravity"
-		, "required": false
-		, "dest": "layout_gravity"
-		, "type": "int"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": 10
-		, "help": "gravity in Force Atlas 2 layout"
-	}
-	, "lytsr": {
-		"long": "layout_scaling_ratio"
-		, "required": false
-		, "dest": "layout_scaling_ratio"
-		, "type": "int"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": 5.0
-		, "help": "scaling ration in Force Atlas 2 layout"
-	}
-	, "layout_to_radial": {
-		"long": "layout_to_radial"
-		, "required": false
-		, "dest": "layout_to_radial"
-		, "action": "store_true"
-		, "default": false
-		, "help": "convert layout to radial base"
-	}
-	, "layout_hub_attraction": {
-		"long": "layout_hub_attraction"
-		, "required": false
-		, "dest": "layout_hub_attraction"
-		, "action": "store_true"
-		, "default": false
-		, "help": "hub attraction in Force Atlas 2 layout"
-	}
-	, "crv": {
-		"long": "edge_curved"
-		, "required": false
-		, "dest": "edge_curved"
-		, "type": "int"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": 0.4
-		, "help": "edge curved"
-	}
-	, "rtt": {
-		"long": "pdf_rotate"
-		, "required": false
-		, "dest": "pdf_rotate"
-		, "action": "store_true"
-		, "default": false
-		, "help": "rotated output"
-	}
-	, "trm": {
-		"long": "img_trim"
-		, "required": false
-		, "dest": "img_trim"
-		, "action": "store_true"
-		, "default": false
-		, "help": "trim output"
-	}
-	, "pdf": {
-		"long": "save_pdf"
-		, "required": false
-		, "dest": "save_pdf"
-		, "action": "store_true"
-		, "default": false
-		, "help": "save pdf"
-	}
-	, "png": {
-		"long": "save_png"
-		, "required": false
-		, "dest": "save_png"
-		, "action": "store_true"
-		, "default": false
-		, "help": "save png"
-	}
-	, "shw": {
-		"long": "show_plot"
-		, "required": false
-		, "dest": "show_plot"
-		, "action": "store_true"
-		, "default": false
-		, "help": "show plot output"
-	}
-	, "giant": {
-		"long": "only_giant_component"
-		, "required": false
-		, "dest": "only_giant_component"
-		, "action": "store_true"
-		, "default": false
-		, "help": "plot only giant component"
-	}
-	, "vsb": {
-		"long": "vertex_size_by"
-		, "required": false
-		, "dest": "vertex_size_by"
-		, "type": "str"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": "degree"
-		, "help": "set vertex size based on degree, weight or neither of them"
-	}
-	, "vcb": {
-		"long": "vertex_color_by"
-		, "required": false
-		, "dest": "vertex_color_by"
-		, "type": "str"
-		, "nargs": "?"
-		, "action": "store"
-		, "default": "degree"
-		, "help": "set vertex size based on degree, membership or neither of them"
+    },
+	"mg": {
+		"long": "margin",
+		"required": false,
+		"dest": "margin",
+		"type": "int",
+		"nargs": "?",
+		"action": "store",
+		"default": 20,
+		"help": "image margin"
+	},
+	"vmin": {
+		"long": "vertex_size_min",
+		"required": false,
+		"dest": "vertex_size_min",
+		"type": "int",
+		"nargs": "?",
+		"action": "store",
+		"default": 1,
+		"help": "minimum vertex size"
+	},
+	"vmax": {
+		"long": "vertex_size_max",
+		"required": false,
+		"dest": "vertex_size_max",
+		"type": "int",
+		"nargs": "?",
+		"action": "store",
+		"default": 3,
+		"help": "maximum vertex size"
+	},
+	"wmin": {
+		"long": "edge_weight_min",
+		"required": false,
+		"dest": "edge_weight_min",
+		"type": "int",
+		"nargs": "?",
+		"action": "store",
+		"default": 0.1,
+		"help": "minimum vertex weight"
+	},
+	"wmax": {
+		"long": "edge_weight_max",
+		"required": false,
+		"dest": "edge_weight_max",
+		"type": "int",
+		"nargs": "?",
+		"action": "store",
+		"default": 10,
+		"help": "maximum vertex weight"
+	},
+	"omin": {
+		"long": "edge_opacity_min",
+		"required": false,
+		"dest": "edge_opacity_min",
+		"type": "int",
+		"nargs": "?",
+		"action": "store",
+		"default": 0.01,
+		"help": "minimum opacity degree"
+	},
+	"omax": {
+		"long": "edge_opacity_max",
+		"required": false,
+		"dest": "edge_opacity_max",
+		"type": "int",
+		"nargs": "?",
+		"action": "store",
+		"default": 0.8,
+		"help": "maximum opacity for degree"
+	},
+	"b": {
+		"long": "bbox",
+		"required": false,
+		"dest": "bbox",
+		"type": "int",
+		"nargs": "+",
+		"action": "store",
+		"default": [300, 300],
+		"help": "the bounding box of the plot"
+	},
+	"lc": {
+		"long": "layers_to_color",
+		"required": false,
+		"dest": "layers_to_color",
+		"type": "int",
+		"nargs": "+",
+		"action": "store",
+		"default": false,
+		"help": "layers to coloring in a k-partite network"
+	},
+	"sp": {
+		"long": "split_projections",
+		"required": false,
+		"dest": "split_projections",
+		"action": "store_true",
+		"default": false,
+		"help": "split the networks into its one-mode projections"
+	},
+	"ube": {
+		"long": "use_boundary_edges",
+		"required": false,
+		"dest": "use_boundary_edges",
+		"action": "store_true",
+		"default": false,
+		"help": "force the use of boundary edges in the layout"
+	},
+	"lyt": {
+		"long": "layout_name",
+		"required": false,
+		"dest": "layout_name",
+		"type": "str",
+		"nargs": "?",
+		"action": "store",
+		"default": "fr",
+		"help": "layout name"
+	},
+	"lytn": {
+		"long": "layout_niter",
+		"required": false,
+		"dest": "layout_niter",
+		"type": "int",
+		"nargs": "?",
+		"action": "store",
+		"default": 500,
+		"help": "number of iterations in layout"
+	},
+	"lytg": {
+		"long": "layout_gravity",
+		"required": false,
+		"dest": "layout_gravity",
+		"type": "int",
+		"nargs": "?",
+		"action": "store",
+		"default": 10,
+		"help": "gravity in Force Atlas 2 layout"
+	},
+	"lytsr": {
+		"long": "layout_scaling_ratio",
+		"required": false,
+		"dest": "layout_scaling_ratio",
+		"type": "int",
+		"nargs": "?",
+		"action": "store",
+		"default": 5.0,
+		"help": "scaling ration in Force Atlas 2 layout"
+	},
+	"layout_to_radial": {
+		"long": "layout_to_radial",
+		"required": false,
+		"dest": "layout_to_radial",
+		"action": "store_true",
+		"default": false,
+		"help": "convert layout to radial base"
+	},
+	"layout_hub_attraction": {
+		"long": "layout_hub_attraction",
+		"required": false,
+		"dest": "layout_hub_attraction",
+		"action": "store_true",
+		"default": false,
+		"help": "hub attraction in Force Atlas 2 layout"
+	},
+	"crv": {
+		"long": "edge_curved",
+		"required": false,
+		"dest": "edge_curved",
+		"type": "int",
+		"nargs": "?",
+		"action": "store",
+		"default": 0.4,
+		"help": "edge curved"
+	},
+	"rtt": {
+		"long": "pdf_rotate",
+		"required": false,
+		"dest": "pdf_rotate",
+		"action": "store_true",
+		"default": false,
+		"help": "rotated output"
+	},
+	"trm": {
+		"long": "img_trim",
+		"required": false,
+		"dest": "img_trim",
+		"action": "store_true",
+		"default": false,
+		"help": "trim output"
+	},
+	"pdf": {
+		"long": "save_pdf",
+		"required": false,
+		"dest": "save_pdf",
+		"action": "store_true",
+		"default": false,
+		"help": "save pdf"
+	},
+	"json": {
+		"long": "save_json",
+		"required": false,
+		"dest": "save_json",
+		"action": "store_true",
+		"default": false,
+		"help": "save json"
+	},
+	"png": {
+		"long": "save_png",
+		"required": false,
+		"dest": "save_png",
+		"action": "store_true",
+		"default": false,
+		"help": "save png"
+	},
+	"shw": {
+		"long": "show_plot",
+		"required": false,
+		"dest": "show_plot",
+		"action": "store_true",
+		"default": false,
+		"help": "show plot output"
+	},
+	"giant": {
+		"long": "only_giant_component",
+		"required": false,
+		"dest": "only_giant_component",
+		"action": "store_true",
+		"default": false,
+		"help": "plot only giant component"
+	},
+	"vsb": {
+		"long": "vertex_size_by",
+		"required": false,
+		"dest": "vertex_size_by",
+		"type": "str",
+		"nargs": "?",
+		"action": "store",
+		"default": "degree",
+		"help": "set vertex size based on degree, weight or neither of them"
+	},
+	"vcb": {
+		"long": "vertex_color_by",
+		"required": false,
+		"dest": "vertex_color_by",
+		"type": "str",
+		"nargs": "?",
+		"action": "store",
+		"default": "degree",
+		"help": "set vertex size based on degree, membership or neither of them"
 	}
 }

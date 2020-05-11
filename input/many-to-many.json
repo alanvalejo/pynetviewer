@@ -2,49 +2,50 @@
 	"vertices": [
 		50,
 		50
-	]
-	, "bbox": [
+	],
+	"bbox": [
 		500,
 		200
-	]
-	, "input": "network/many-to-many.ncol"
-	, "output": "many-to-many"
-	, "output_directory": "output"
-	, "file_type": "network/many-to-many.type"
-	, "file_membership": "network/many-to-many.membership"
-	, "file_color": null
-	, "file_layout": "output/many-to-many.layout"
-	, "file_weight": null
-	, "layout_name": "bipartite"
-	, "layout_niter": 500
-	, "layout_to_radial": false
-	, "layout_scaling_ratio": 5.0
-	, "layout_gravity": 30.0
-	, "layout_hub_attraction": false
-	, "use_boundary_edges": false
-	, "split_projections": false
-	, "pdf_rotate": true
-	, "img_trim": true
-	, "save_pdf": true
-	, "save_png": true
-	, "show_plot": false
-	, "overlapping_paint": true
-	, "overlapping_shape": "rectangle"
-	, "overlapping_color": "red"
-	, "only_giant_component": false
-	, "vertex_frame_color": "rgba(1,1,1,0.3)"
-	, "vertex_frame_width": 1.0
-    , "vertex_color_by": "membership"
-	, "vertex_size_by": "degree"
-	, "vertex_size_max": 20
-	, "vertex_size_min": 5
-	, "delete_vertex_by_degree_le": null
-	, "edge_weight_min": 1
-	, "edge_weight_max": 10
-	, "edge_opacity_min": 0.1
-	, "edge_opacity_max": 0.5
-	, "edge_curved": null
-	, "delete_edge_by_weight_le": null
-	, "community_detection_algorithm": null
-    , "number_of_communities": null
+	],
+	"input": "network/many-to-many.ncol",
+	"output": "many-to-many",
+	"output_directory": "output",
+	"file_type": "network/many-to-many.type",
+	"file_membership": "network/many-to-many.membership",
+	"file_color": null,
+	"file_layout": "output/many-to-many.layout",
+	"file_weight": null,
+	"layout_name": "bipartite",
+	"layout_niter": 500,
+	"layout_to_radial": false,
+	"layout_scaling_ratio": 5.0,
+	"layout_gravity": 30.0,
+	"layout_hub_attraction": false,
+	"use_boundary_edges": false,
+	"split_projections": false,
+    "layers_to_color": false,
+	"pdf_rotate": true,
+	"img_trim": true,
+	"save_pdf": true,
+	"save_png": true,
+	"show_plot": false,
+	"overlapping_paint": true,
+	"overlapping_shape": "rectangle",
+	"overlapping_color": "red",
+	"only_giant_component": false,
+	"vertex_frame_color": "rgba(1,1,1,0.3)",
+	"vertex_frame_width": 1.0,
+    "vertex_color_by": "membership",
+	"vertex_size_by": "degree",
+	"vertex_size_max": 20,
+	"vertex_size_min": 5,
+	"delete_vertex_by_degree_le": null,
+	"edge_weight_min": 1,
+	"edge_weight_max": 10,
+	"edge_opacity_min": 0.1,
+	"edge_opacity_max": 0.5,
+	"edge_curved": null,
+	"delete_edge_by_weight_le": null,
+	"community_detection_algorithm": null,
+    "number_of_communities": null
 }

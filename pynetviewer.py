@@ -42,7 +42,6 @@ import inspect
 import math
 import json
 
-from pdfCropMargins import crop
 from colour import Color
 from fa2 import ForceAtlas2
 
@@ -470,7 +469,6 @@ if __name__ == '__main__':
             if options.img_trim:
                 # command = 'pdfcrop ' + options.output + '.pdf ' + options.output + '.pdf'
                 # os.system(command)
-                # crop(["-p", "20", "-u", "-s", options.output + '.pdf '])
                 pass
 
         if options.save_png:

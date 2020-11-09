@@ -1,19 +1,19 @@
 {
 	"vertices": [
-		1550
-		, 1550
+		150
+		, 150
 	]
 	, "bbox": [
 		600
 		, 600
 	]
-	, "input": "network/bipartite-3.ncol"
+	, "input": "../bnoc/output/bipartite-3.ncol"
 	, "output": "bipartite-3"
 	, "output_directory": "output"
-	, "file_type": "network/bipartite-3.type"
-	, "file_membership": "network/bipartite-3.membership"
+	, "file_type": "../bnoc/output//bipartite-3.type"
+	, "file_membership": "../bnoc/output//bipartite-3.membership"
 	, "file_color": null
-	, "file_layout": "output/bipartite-3.layout"
+	, "file_layout": null
 	, "file_weight": null
 	, "layout_name": "fr"
 	, "layout_niter": 500
@@ -24,11 +24,11 @@
 	, "use_boundary_edges": false
 	, "split_projections": false
     , "layers_to_color": false
-	, "pdf_rotate": true
+	, "pdf_rotate": false
 	, "img_trim": true
-	, "save_pdf": true
-	, "save_png": true
-	, "show_plot": false
+	, "save_pdf": false
+	, "save_png": false
+	, "show_plot": true
 	, "overlapping_paint": true
 	, "overlapping_shape": "rectangle"
 	, "overlapping_color": "red"
@@ -37,11 +37,11 @@
 	, "vertex_frame_width": 1.0
     , "vertex_color_by": "membership"
 	, "vertex_size_by": "strength"
-	, "vertex_size_max": 18
-	, "vertex_size_min": 0.5
+	, "vertex_size_max": 20
+	, "vertex_size_min": 1
 	, "delete_vertex_by_degree_le": null
 	, "edge_weight_min": 1
-	, "edge_weight_max": 15
+	, "edge_weight_max": 10
 	, "edge_opacity_min": 0.1
 	, "edge_opacity_max": 0.9
 	, "edge_curved": null

@@ -42,6 +42,7 @@ import inspect
 import math
 import json
 
+from pdfCropMargins import crop
 from colour import Color
 from fa2 import ForceAtlas2
 
@@ -99,7 +100,32 @@ def compute_layout(graph, options, boundary_edges=None):
     else:
         gcopy = graph
     if igraph.__version__ != '0.8.0':
-        if options.layout_name == 'heterogeneous':
+        if options.layout_name == 'forceatlas2':
+            forceatlas2 = ForceAtlas2(
+                # Behavior alternatives
+                outboundAttractionDistribution=options.layout_hub_attraction  # Dissuade hubs
+                , linLogMode=False  # NOT IMPLEMENTED
+                , adjustSizes=False  # Prevent overlap NOT IMPLEMENTED
+                , edgeWeightInfluence=1.0
+                # Performance
+                , jitterTolerance=10.0
+                , barnesHutOptimize=True
+                , barnesHutTheta=1.2
+                , multiThreaded=False  # NOT IMPLEMENTED
+                # Tuning
+                , scalingRatio=options.layout_scaling_ratio
+                , strongGravityMode=False
+                , gravity=options.layout_gravity
+                # Log
+                , verbose=True
+            )
+            graph.vs['layout'] = forceatlas2.forceatlas2_igraph_layout(
+                gcopy
+                , pos=None
+                , iterations=options.layout_niter
+                , weight_attr="weight"
+            )
+        elif options.layout_name == 'heterogeneous':
             graph.vs['layout'] = build_layout(graph, options)
             for edge in graph.es():
                 u, v = edge.tuple
@@ -226,8 +252,12 @@ def compute_shapes(graph):
 
 def read_color(graph, file):
     with open(file, 'r') as f:
+        colors = []
         for index, line in enumerate(f):
-            graph.vertex['color'].append(line.strip())
+            colors.append(line.strip())
+        graph.vs['vertex_color'] = 'black'
+        for vertex in graph.vs():
+            vertex['vertex_color'] = colors[list(vertex['membership'])[0]]
 
 def compute_vertex_color_by_membership(graph, output='output_file'):
 
@@ -243,7 +273,7 @@ def compute_vertex_color_by_membership(graph, output='output_file'):
 
     with open(output + '.color', 'w+') as f:
         for color in colors:
-            f.write('\n'.join(color))
+            f.write(color + '\n')
 
 if __name__ == '__main__':
 
@@ -326,30 +356,31 @@ if __name__ == '__main__':
         if options.vertex_size_by == 'weight':
             graph.vs['weight'] = compute_min_max(graph.vs['weight'], options.vertex_size_min, options.vertex_size_max)
 
-        if options.vertex_color_by == 'weight':
-            unique_degrees = list(numpy.unique(graph.strength()))
-            blue = Color("#000000")
-            red = Color("#CC7B7B")
-            colors = list(blue.range_to(red, len(unique_degrees)))
-            graph.vs['vertex_color'] = [str(colors[unique_degrees.index(degree)]) for degree in graph.strength()]
-        elif options.vertex_color_by == 'degree':
-            unique_weights = list(numpy.unique(graph.vs['weight']))
-            blue = Color("#000000")
-            red = Color("#CC7B7B")
-            colors = list(blue.range_to(red, len(unique_weights)))
-            graph.vs['vertex_color'] = [str(colors[unique_weights.index(weight)]) for weight in graph.vs['weight']]
-        elif options.vertex_color_by == 'strength':
-            unique_weights = list(numpy.unique(graph.strength(weights='weight')))
-            blue = Color("#000000")
-            red = Color("#CC7B7B")
-            colors = list(blue.range_to(red, len(unique_weights)))
-            graph.vs['vertex_color'] = [str(colors[unique_weights.index(weight)]) for weight in graph.strength(weights='weight')]
-        elif options.vertex_color_by == 'membership':
-            if not options.community_detection_algorithm and not options.file_membership:
-                log.warning('To coloring vertex by its membership provide a membership file ou set a community '
-                            'detection algorithm.')
-                sys.exit(1)
-            compute_vertex_color_by_membership(graph, output=options.output)
+        if not options.file_color:
+            if options.vertex_color_by == 'weight':
+                unique_degrees = list(numpy.unique(graph.strength()))
+                blue = Color("#000000")
+                red = Color("#CC7B7B")
+                colors = list(blue.range_to(red, len(unique_degrees)))
+                graph.vs['vertex_color'] = [str(colors[unique_degrees.index(degree)]) for degree in graph.strength()]
+            elif options.vertex_color_by == 'degree':
+                unique_weights = list(numpy.unique(graph.vs['weight']))
+                blue = Color("#000000")
+                red = Color("#CC7B7B")
+                colors = list(blue.range_to(red, len(unique_weights)))
+                graph.vs['vertex_color'] = [str(colors[unique_weights.index(weight)]) for weight in graph.vs['weight']]
+            elif options.vertex_color_by == 'strength':
+                unique_weights = list(numpy.unique(graph.strength(weights='weight')))
+                blue = Color("#000000")
+                red = Color("#CC7B7B")
+                colors = list(blue.range_to(red, len(unique_weights)))
+                graph.vs['vertex_color'] = [str(colors[unique_weights.index(weight)]) for weight in graph.strength(weights='weight')]
+            elif options.vertex_color_by == 'membership':
+                if not options.community_detection_algorithm and not options.file_membership:
+                    log.warning('To coloring vertex by its membership provide a membership file ou set a community '
+                                'detection algorithm.')
+                    sys.exit(1)
+                compute_vertex_color_by_membership(graph, output=options.output)
 
         if options.layers_to_color:
             layers_list = list(range(graph['layers']))
@@ -437,14 +468,17 @@ if __name__ == '__main__':
             if options.pdf_rotate:
                 helper.rotate_pdf(options.output)
             if options.img_trim:
-                command = 'pdfcrop ' + options.output + '.pdf ' + options.output + '.pdf'
-                os.system(command)
+                # command = 'pdfcrop ' + options.output + '.pdf ' + options.output + '.pdf'
+                # os.system(command)
+                # crop(["-p", "20", "-u", "-s", options.output + '.pdf '])
+                pass
 
         if options.save_png:
+            print(options.output + '.png')
             igraph.plot(graph, options.output + '.png', **visual_style)
-            if options.img_trim:
-                command = 'convert ' + options.output + '.png -trim ' + options.output + '.png'
-                os.system(command)
+            # if options.img_trim:
+            #     command = 'convert ' + options.output + '.png -trim ' + options.output + '.png'
+            #     os.system(command)
 
         if options.show_plot:
             igraph.plot(graph, **visual_style)

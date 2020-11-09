@@ -131,7 +131,7 @@ are assigned in.
     $ conda create --name pynetviewer python=3.7.2
     $ conda activate pynetviewer
     $ conda install -c anaconda numpy
-    $ conda install -c conda-forge python-igraph # python-igraph=0.7.1 for old layout versions
+    $ conda install -c conda-forge python-igraph
     $ conda install -c conda-forge colour
     $ conda install -c anaconda pyyaml
     $ conda install -c conda-forge pypdf2
@@ -141,6 +141,12 @@ are assigned in.
     $ sudo apt install imagemagick
     $ pip install --upgrade bezier[full] ????
     
+    # Use python-igraph=0.7.1 for old layout versions
+    # If libicui18n.so.58 problem occor use
+    # $ conda update --all
+    # If libiconv.so.2 problem occor use
+    # $ conda install -c r libiconv
+
 > Install ForceAtlas2 for Python: https://github.com/bhargavchippada/forceatlas2
 
     $ pip install fa2

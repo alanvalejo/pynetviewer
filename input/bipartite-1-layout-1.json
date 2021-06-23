@@ -7,6 +7,7 @@
 		700,
 		250
 	],
+	"margin": 30,
 	"input": "network/bipartite-1.ncol",
 	"output": "bipartite-1-layout-1",
 	"output_directory": "output",
@@ -40,8 +41,8 @@
 	"vertex_size_max": 15,
 	"vertex_size_min": 1,
 	"delete_vertex_by_degree_le": null,
-	"edge_weight_min": 0.1,
-	"edge_weight_max": 10,
+	"edge_weight_min": 0.0,
+	"edge_weight_max": 0,
 	"edge_opacity_min": 0.05,
 	"edge_opacity_max": 0.5,
 	"edge_curved": null,

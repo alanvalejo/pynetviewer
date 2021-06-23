@@ -32,6 +32,7 @@ Warning: The original implementation (i.e. paper version [1]) is deprecated. Thi
 and fast. There may be divergences between this version and the original algorithm. If you looking for the original
 version used in the paper don't hesitate to contact the authors.
 """
+
 import sys
 
 import igraph
@@ -41,9 +42,20 @@ import random
 import inspect
 import math
 import json
+import pandas as pd
+
+import matplotlib
+matplotlib.use('Cairo')
+from cairosvg import surface
+from cairosvg import parser
+import matplotlib.pyplot as plt
+import matplotlib.image as img
+import cairo
 
 from colour import Color
 from fa2 import ForceAtlas2
+from collections import defaultdict
+from datashader.bundling import hammer_bundle
 
 import models.args as args
 import models.helper as helper
@@ -93,6 +105,7 @@ def number_of_components(graph):
     return len(components_sizes)
 
 def compute_layout(graph, options, boundary_edges=None):
+
     if boundary_edges:
         gcopy = graph.copy()
         gcopy.delete_edges(boundary_edges)
@@ -131,6 +144,7 @@ def compute_layout(graph, options, boundary_edges=None):
                 type_u, type_v = graph.vs['type'][u], graph.vs['type'][v]
                 edge['edge_curved'] = 0.2 if type_u != type_v else -2.0
         else:
+            # graph.vs['layout'] = gcopy.layout(options.layout_name, niter=options.layout_niter, grid="nogrid", weights='weight')
             graph.vs['layout'] = gcopy.layout(options.layout_name)
     else:
         if options.layout_name == 'forceatlas2':
@@ -189,6 +203,12 @@ def compute_min_max(vector, new_min, new_max):
             new_value = new_min
         result[key] = new_value
     return result
+
+def get_edges(graph):
+    edges = []
+    for edge in graph.es():
+        edges.append(edge)
+    return edges
 
 def get_boundary_edges(graph):
     boundary_edges = []
@@ -274,6 +294,14 @@ def compute_vertex_color_by_membership(graph, output='output_file'):
         for color in colors:
             f.write(color + '\n')
 
+# function to convert to array
+def surface_to_npim(surface):
+    """ Transforms a Cairo surface into a numpy array. """
+    im = +np.frombuffer(surface.get_data(), np.uint8)
+    H,W = surface.get_height(), surface.get_width()
+    im.shape = (H,W, 4) # for RGBA
+    return im[:,:,:3]
+
 if __name__ == '__main__':
 
     # Setup parse options command line
@@ -315,6 +343,8 @@ if __name__ == '__main__':
         read_layout(graph, options.file_layout)
     if options.file_color:
         read_color(graph, options.file_color)
+
+    print('Is bipartite:', graph.is_bipartite())
 
     graphs = [graph]
 
@@ -462,7 +492,35 @@ if __name__ == '__main__':
             with open(options.output + '.json', 'w+') as f:
                 json.dump(graph_json, f, indent=4)
 
+        position = list()
+        for (x, y) in graph.vs['layout']:
+            position.append((x, y))
+        position = pd.DataFrame(position, columns=['x', 'y']) 
+
+        edges = list()
+        for edge in graph.es():
+            edges.append((edge['weight'], edge.tuple[0], edge.tuple[1]))
+        edges = pd.DataFrame(edges, columns=['weight', 'source', 'target'])
+
+        # # hb = hammer_bundle(position, edges, iterations=10, decay=0.6, initial_bandwidth=0.6)
+        # hb = hammer_bundle(position, edges, weight=None)
+        # # a = hb.plot(x="x", y="y", figsize=(options.bbox[0]/float(DPI), options.bbox[1]/float(DPI)), zorder=1, linewidth=1, color='black', alpha=1.0)
+        # hb.plot(x="x", y="y", zorder=0, linewidth=1, color='black', alpha=0.9)
+
+        # fig = plt.gcf()
+        # DPI = fig.get_dpi()
+        # fig.set_size_inches(options.bbox[0]/float(DPI), options.bbox[1]/float(DPI))
+        # ax = plt.gca()
+        # ax.legend().set_visible(False)
+        # ax.get_xaxis().set_visible(False)
+        # ax.get_yaxis().set_visible(False)
+        # ax.set_axis_off()
+        # plt.gca().invert_yaxis()
+        # # bbox_inches='tight' cut box
+        # plt.savefig(options.output + '-bg.png', dpi=100, transparent=False, pad_inches=0)
+
         if options.save_pdf:
+            # graph.delete_edges(get_edges(graph))
             igraph.plot(graph, options.output + '.pdf', **visual_style)
             if options.pdf_rotate:
                 helper.rotate_pdf(options.output)
@@ -472,7 +530,6 @@ if __name__ == '__main__':
                 pass
 
         if options.save_png:
-            print(options.output + '.png')
             igraph.plot(graph, options.output + '.png', **visual_style)
             # if options.img_trim:
             #     command = 'convert ' + options.output + '.png -trim ' + options.output + '.png'
@@ -480,3 +537,18 @@ if __name__ == '__main__':
 
         if options.show_plot:
             igraph.plot(graph, **visual_style)
+
+
+        # try:
+        #     from PIL import Image
+        # except ImportError:
+        #     import Image
+
+        # background = Image.open(options.output + '-bg.png')
+        # overlay = Image.open(options.output + '.png')
+
+        # background = background.convert("RGBA")
+        # overlay = overlay.convert("RGBA")
+
+        # new_img = Image.blend(background, overlay, 0.5)
+        # new_img.save(options.output + '-eb.png',"PNG")

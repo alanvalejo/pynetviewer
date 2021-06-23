@@ -4,9 +4,10 @@
 		, 250
 	]
 	, "bbox": [
-		350
-		, 350
+		500
+		, 500
 	]
+	, "margin": 0
 	, "input": "network/bipartite-1.ncol"
 	, "output": "bipartite-1-layout-2"
 	, "output_directory": "output"
@@ -41,8 +42,8 @@
 	, "vertex_size_min": 1
 	, "delete_vertex_by_degree_le": null
 	, "edge_weight_min": 1
-	, "edge_weight_max": 10
-	, "edge_opacity_min": 0.1
+	, "edge_weight_max": 1
+	, "edge_opacity_min": 0.5
 	, "edge_opacity_max": 0.9
 	, "edge_curved": null
 	, "delete_edge_by_weight_le": null
